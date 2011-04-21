@@ -1,8 +1,20 @@
+from functions.sum import *
+from functions.exp import *
 if __name__ == "__main__":
-    from expr import *
-    from expr_sum import *
-    from expr_max import *
-    from exp import *
-    x = expr_tree(expr_max, [expr_tree(expr_sum, [expr(1), expr(3)]),
-                             expr_tree(expr_sum, [expr(-2), expr(4)])])
-    print x.get_value()
+    x = expr_sum([3, 4])
+    print x
+    x = expr_sum([scalar(3), scalar(4)])
+    print x
+    x = expr_exp(expr_sum(scalar_var('x'), scalar_var('y')))
+    print x
+#    x = expr(expr_max, [expr(expr_sum, [scalar(1), scalar(3)]),
+#                             expr(expr_sum, [scalar(-2), scalar(4)])])
+#    y = expr(expr_exp, [x])
+#    print y.get_value()
+#    print y.__str__()
+    
+#    x = expr(expr_max, [scalar_var('x'), scalar_var('y')])
+#    print x.__str__()
+    
+#    x = expr_sum(scalar_var('x'), scalar_var('y'))
+#    print x.__str__()

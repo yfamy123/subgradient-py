@@ -1,14 +1,10 @@
 # The following code is an excerpt from cvxpy.defs
 
 # Object types
-OPERATOR   = 'operator'
-CONSTANT   = 'constant'
-FUNCTION   = 'function'
-VARIABLE   = 'variable'
-PARAMETER  = 'parameter'
-TREE       = 'tree'
-SET        = 'set'
-EXPRESSION = 'expression'
+CONSTANT  = 'constant'
+FUNCTION  = 'function'
+VARIABLE  = 'variable'
+PARAMETER = 'parameter'
 
 # Curvature
 CONVEX  = 'convex'

@@ -1,0 +1,13 @@
+symbolic subdifferentiation
+
+Things we need
+
+1. expression
+  1-1. variable
+  1-2. constant
+2. constraint
+  2-1. affine == affine
+  2-2. convex <= concave
+  2-3. concave <= convex
+3. objective (pair of minimize/maximize and expression)
+4. problem (pair of objective and list of constraints)

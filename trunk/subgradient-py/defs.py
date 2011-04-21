@@ -14,3 +14,6 @@ CONCAVE = 'concave'
 INCREASING = 'increasing'
 DECREASING = 'decreasing'
 NEITHER    = 'neither'
+
+# Some constants
+NAN = float('nan')

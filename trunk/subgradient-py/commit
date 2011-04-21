@@ -1,5 +1,7 @@
 #!/bin/bash
 rm *~ -f
 rm *.pyc -f
+rm functions/*~ -f
+rm functions/*.pyc -f
 svn commit
 

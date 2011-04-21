@@ -38,9 +38,9 @@ class cvxpy_abs(object):
     # Method: __init__
     def __init__(self):
         self.curvature = CONVEX
-	self.expansion_type = PM
+        self.expansion_type = PM
         self.type = FUNCTION
-	self.atom = True
+        self.atom = True
         self.name = 'abs'
 
     # Method: __call__
@@ -71,13 +71,13 @@ class cvxpy_abs(object):
 
     # Method: _pm_expand
     def _pm_expand(self,constr):
-	"""
-	Description: Return the partial minimization 
+        """
+        Description: Return the partial minimization 
         expansion of the function. 
-	Argument constr: The constraint to be
-	replaced. It is assumed to be in expanded
-	format so the right hand side is a variable.
-	"""
+        Argument constr: The constraint to be
+        replaced. It is assumed to be in expanded
+        format so the right hand side is a variable.
+        """
         arg = constr.left.children[0]
         right = constr.right
         return cvxpy_list([less(-right,arg),

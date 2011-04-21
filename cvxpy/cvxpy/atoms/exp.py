@@ -39,9 +39,9 @@ class cvxpy_exp(object):
     # Method: __init__
     def __init__(self):
         self.curvature = CONVEX
-	self.expansion_type = DIF
+        self.expansion_type = DIF
         self.type = FUNCTION
-	self.atom = True
+        self.atom = True
         self.name = 'exp'
 
     # Method: __call__
@@ -72,17 +72,17 @@ class cvxpy_exp(object):
 
     # Method: _construct
     def _construct(self,args,t2,mp,n):
-	"""
-	Description: Constructs f,grad f, hessian f
-	and the characteristic function of the domain of f
-	needed by cvxopt to solve the optimization problem.
-	Argument args: List of arguments for the function.
-	Argument t2: Variable from the right hand side of the
-	inequality.
-	Argument mp: Map from variable to index in vector x.
-	Argument n: Number of variables. This is the size of
-	vector that will be the input to f, grad f and hessian f.
-	"""
+        """
+        Description: Constructs f,grad f, hessian f
+        and the characteristic function of the domain of f
+        needed by cvxopt to solve the optimization problem.
+        Argument args: List of arguments for the function.
+        Argument t2: Variable from the right hand side of the
+        inequality.
+        Argument mp: Map from variable to index in vector x.
+        Argument n: Number of variables. This is the size of
+        vector that will be the input to f, grad f and hessian f.
+        """
 
         # Get argument
         t1 = args[0]

@@ -7,6 +7,7 @@ if __name__ == "__main__":
     print x
     x = expr_exp(expr_sum(scalar_var('x'), scalar_var('y')))
     print x
+    print x.get_vars()
 #    x = expr(expr_max, [expr(expr_sum, [scalar(1), scalar(3)]),
 #                             expr(expr_sum, [scalar(-2), scalar(4)])])
 #    y = expr(expr_exp, [x])

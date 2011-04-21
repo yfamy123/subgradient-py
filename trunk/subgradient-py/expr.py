@@ -2,8 +2,8 @@ from defs import *
 
 # Base class
 class expr(object):
-    def __init__(self, v = None):
-        self.value = v
+    def __init__(self, value = None):
+        self.value = value
         self.shape = (1, 1)
     def get_shape(self):
         return self.shape
@@ -23,17 +23,10 @@ class expr(object):
         return 0
 
 class expr_tree(expr):
-    def __init__(self, func, children):
-        self.func     = func
+    def __init__(self, this, children):
+        self.this     = this
         self.children = children
     def get_value(self):
-        if(self.func.name == '+'):
-            values = map(lambda x: x.get_value(), self.children)
-            return sum(values)
-        elif(self.func.name == '*'):
-            l = self.children[0].get_value()
-            r = self.children[1].get_value()
-            return l*r
-        else:
-            values = map(lambda x: x.get_value(), self.children)
-            return self.func(values)
+    	values = map(lambda x: x.get_value(), self.children)
+    	print values
+        return self.this(values)

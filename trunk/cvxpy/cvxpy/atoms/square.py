@@ -39,9 +39,9 @@ class cvxpy_square(object):
     # Method: __init__
     def __init__(self):
         self.curvature = CONVEX
-	self.expansion_type = SDC
+        self.expansion_type = SDC
         self.type = FUNCTION
-	self.atom = True
+        self.atom = True
         self.name = 'square'
 
     # Method: __call__
@@ -72,16 +72,16 @@ class cvxpy_square(object):
 
     # Method: _construct
     def _construct(self,args,t2,mp,n):
-	"""
-	Description: Constructs the epygraph of
-	this functions by means of an inequality
-	with respect to the semidefinite cone.
-	Argument args: List of arguments.
-	Argument t2: Variable from the right side
-	of the inequality.
-	Argument mp: Map from variables to indeces.
-	Argument n: Number of variables.
-	"""
+        """
+        Description: Constructs the epygraph of
+        this functions by means of an inequality
+        with respect to the semidefinite cone.
+        Argument args: List of arguments.
+        Argument t2: Variable from the right side
+        of the inequality.
+        Argument mp: Map from variables to indeces.
+        Argument n: Number of variables.
+        """
 
         # Get argument
         t1 = args[0]

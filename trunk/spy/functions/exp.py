@@ -1,6 +1,5 @@
 import math
-from defs import *
-from scalar import *
+from spy.scalar import *
 
 class expr_exp(object):
     def __init__(self):
@@ -18,6 +17,9 @@ class expr_exp(object):
             return expr(expr_exp, [x])
         else:
             return math.exp(x)
+    def subgrad(self, values):
+        x = values[0]
+        return [expr_exp(x)]
 
 # Function instance
 expr_exp = expr_exp()

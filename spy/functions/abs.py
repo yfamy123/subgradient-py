@@ -1,23 +1,23 @@
 import math
 from spy.scalar import *
 
-class expr_prod(object):
+class expr_abs(object):
     def __init__(self):
-        self.name = 'prod'
+        self.name = 'abs'
     def __call__(self, *args):
         while type(args[0]) is list: args = args[0]
-        assert len(args) == 2
+        assert len(args) == 1
         
         x = args[0]
-        y = args[1]
         if(isinstance(x, expr)):
-            return expr(expr_prod, [x, y])
+            return expr(expr_abs, [x])
         else:
-            return x*y
+            return math.abs(x)
     def subgrad(self, values):
         x = values[0]
-        y = values[1]
-        return [y, x]
+        if x > 0:   return 1
+        elif x < 0: return -1
+        else:       return 0
 
 # Function instance
-expr_prod = expr_prod()
+expr_abs = expr_abs()

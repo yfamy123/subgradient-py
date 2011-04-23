@@ -1,0 +1,9 @@
+#!/bin/bash
+rm *~ -f
+rm *.pyc -f
+rm spy/*~ -f
+rm spy/*.pyc -f
+rm spy/functions/*~ -f
+rm spy/functions/*.pyc -f
+svn commit
+

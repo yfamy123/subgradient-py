@@ -1,13 +1,14 @@
 from constants import *
+from utils import *
 
-# Base class
+# Base class for scalar-valued expression
 class expr(object):
     def __init__(self, func = None, children = []):
         self.func     = func
         self.children = children
     def __str__(self):
         strs = map(lambda x: x.__str__(), self.children)
-        if(self.func.name == 'sum'):
+        if self.func.name == 'sum':
             ret = '(' + '+'.join(strs) + ')'
         else:
             ret = self.func.name + '(' + ', '.join(strs) + ')'
@@ -20,6 +21,12 @@ class expr(object):
         for child in self.children:
             ret = ret.union(child.get_vars())
         return ret
+#    def __add__(self, other):
+#        if isNumber(other):
+#            r = scalar(other)
+#        else:
+#            r = other
+#        return expr_sum(self, r)
     def subgrad(self, varmap = {}):
         # composition rule
         # f(x) = h(f1(x), f2(x), ..., fk(x))
@@ -71,7 +78,7 @@ class scalar_var(expr):
     def set_value(self, value):
         self.value = value
     def subgrad(self, varmap = {}):
-        if(self.name in varmap):
+        if self.name in varmap:
             ret = {}
             for var in varmap:
                 ret[var] = 0

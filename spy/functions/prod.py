@@ -1,6 +1,5 @@
 import math
-from defs import *
-from scalar import *
+from spy.scalar import *
 
 class expr_prod(object):
     def __init__(self):

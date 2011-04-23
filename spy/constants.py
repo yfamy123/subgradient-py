@@ -1,4 +1,4 @@
-# The following code is an excerpt from cvxpy.defs
+# Some Constants
 
 # Object types
 CONSTANT  = 'constant'
@@ -15,5 +15,5 @@ INCREASING = 'increasing'
 DECREASING = 'decreasing'
 NEITHER    = 'neither'
 
-# Some constants
+# Constants
 NAN = float('nan')

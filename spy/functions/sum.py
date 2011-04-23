@@ -1,6 +1,5 @@
 import math
-from defs import *
-from scalar import *
+from spy.scalar import *
 
 class expr_sum(object):
     def __init__(self):
@@ -11,7 +10,6 @@ class expr_sum(object):
         else:
             x = args
         # now x is a list
-        print x[0]
         if(isinstance(x[0], expr)):
             return expr(expr_sum, x)
         else:

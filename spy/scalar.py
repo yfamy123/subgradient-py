@@ -1,4 +1,4 @@
-from defs import *
+from constants import *
 
 # Base class
 class expr(object):

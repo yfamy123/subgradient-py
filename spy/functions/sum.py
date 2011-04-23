@@ -14,6 +14,8 @@ class expr_sum(object):
             return expr(expr_sum, x)
         else:
             return sum(x)
+    def subgrad(self, values):
+        return [1 for i in range(len(values))]
 
 # Function instance
 expr_sum = expr_sum()

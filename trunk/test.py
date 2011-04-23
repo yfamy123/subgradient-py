@@ -15,3 +15,23 @@ if __name__ == "__main__":
     print x
     print 'computing subgrad at x=2, y=-1'
     print x.subgrad({'x': 2, 'y': -1})
+    
+    x = scalar_var('x')
+    y = scalar_var('y')
+    
+    # (e^(e^x))
+    ex = expr_exp(expr_exp(x))
+    print ex
+    print ex.get_value({'x': 1})
+    print ex.get_value({'x': 0})
+    print ex.subgrad({'x': 0})
+    
+    ex = expr_max(x, y)
+    print ex
+    print ex.get_value({'x': 1124, 'y': 233})
+    print ex.subgrad({'x': 1124, 'y': 233})
+    
+    ex = expr_sum(expr_prod(scalar(3), x), expr_prod(scalar(4), y))
+    print ex
+    print ex.get_value({'x': 1124, 'y': 233})
+    print ex.subgrad({'x': 1124, 'y': 233})

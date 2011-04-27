@@ -8,6 +8,6 @@ Things we need
 2. constraint
   2-1. affine == affine
   2-2. convex <= concave
-  2-3. concave <= convex
+  2-3. concave >= convex
 3. objective (pair of minimize/maximize and expression)
 4. problem (pair of objective and list of constraints)

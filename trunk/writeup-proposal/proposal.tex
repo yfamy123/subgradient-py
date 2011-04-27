@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,graphicx,psfrag,url}
+\usepackage[small,bf]{caption}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{verbatim}
+
+\setlength{\captionmargin}{30pt}
+
+\input defs.tex
+\newcommand{\sign}{\mathop{\bf sign}}
+
+\bibliographystyle{alpha}
+
+\title{Symbolic Subdifferentiation in Python}
+\author{Maurizio Cal\'o and Jaehyun Park\\
+Project Proposal for EE364b, Stanford University, Spring 2010-11}
+
+\begin{document}
+\maketitle
+
+\section{Overview}
+Motivated by the first two weeks of lectures, we decided to create a
+Python package (tentative name: Subgradient-PY, or SPY) that solves
+optimization problems using subgradient methods. Using SPY, one will
+be able to formulate and solve an optimization problem using the
+following syntax (subject to change):
+\begin{verbatim}
+from spy import *
+A = rand(20, 5)
+x = vector('x', 5)
+prob = spy_prob(minimize(norm(x, 1)), [A*x <= 1])
+prob.solve()
+\end{verbatim}
+
+\section{Implementation}
+Along with CVX-like library functions, SPY will implement four
+important classes:
+\BIT
+\item Expression: Any real-valued mathematical expression is an object
+of Expression type. It can contain variables whose values are not
+predetermined.
+\item Constraint: A constraint is an inequality of the form
+$(\text{convex}) \le (\text{concave})$ or an equality of the form
+$(\text{affine}) = (\text{affine})$.
+\item Objective: An objective is a simply a pair of \verb minimize  and
+a convex function, or a pair of \verb maximize  and a concave function.
+\item (Optimization) Problem: A problem is a pair of objective and
+a list of constraints.
+\EIT
+
+The essential part of the project is to compute subgradients correctly
+and efficiently, since all other methods will rely heavily on subgradients.
+Details are omitted.
+
+\end{document}

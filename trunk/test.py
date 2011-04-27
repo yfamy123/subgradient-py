@@ -42,6 +42,14 @@ if __name__ == "__main__":
     print ex
     print ex.get_value({'x': 3, 'y': 4})
     print ex.subgrad({'x': 3, 'y': 4})
+
+    ex = expr_max(scalar(0), expr_prod(scalar(3), x))
+    print ex
+    print ex.subgrad({'x': 123})
+    
+    ex = expr_prod(scalar(3), x)
+    print ex
+    print ex.subgrad({'x': 123})
     
     #ex = x+3
     #print ex

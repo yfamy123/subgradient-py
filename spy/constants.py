@@ -17,3 +17,8 @@ NEITHER    = 'neither'
 
 # Constants
 NAN = float('nan')
+
+# RELOPs
+LT = 'less'
+GT = 'greater'
+EQ = 'equal'

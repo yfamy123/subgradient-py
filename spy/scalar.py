@@ -44,6 +44,32 @@ class expr(object):
         for var in varmap:
             ret[var] = sum(q[i]*subgrads[i][var] for i in range(len(q)))
         return ret
+    def is_convex(self):
+        convexity = map(lambda x: x.is_convex(), self.children)
+        concavity = map(lambda x: x.is_concave(), self.children)
+        for i in xrange(length(self.children)):
+            if convexity[i] and concavity[i]:
+                continue
+            if convexity[i] and self.func.is_increasing(i):
+                continue
+            if concavity[i] and self.func.is_decreasing(i):
+                continue
+            return False
+        return True
+    def is_concave(self):
+        convexity = map(lambda x: x.is_convex(), self.children)
+        concavity = map(lambda x: x.is_concave(), self.children)
+        for i in xrange(length(self.children)):
+            if convexity[i] and concavity[i]:
+                continue
+            if concavity[i] and self.func.is_increasing(i):
+                continue
+            if convexity[i] and self.func.is_decreasing(i):
+                continue
+            return False
+        return True
+    def is_affine(self):
+        return self.is_convex() and self.is_concave()
 
 # Scalar constant
 class scalar(expr):
@@ -61,6 +87,10 @@ class scalar(expr):
         for var in varmap:
             ret[var] = 0.0
         return ret
+    def is_convex(self):
+        return True
+    def is_concave(self):
+        return True
 
 # Scalar variable
 class scalar_var(expr):
@@ -86,3 +116,7 @@ class scalar_var(expr):
             return ret
         else:
             return {}
+    def is_convex(self):
+        return True
+    def is_concave(self):
+        return True

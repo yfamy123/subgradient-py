@@ -1,4 +1,4 @@
-symbolic subdifferentiation
+symbolic subdifferentiation in python
 
 Things we need
 
@@ -9,5 +9,16 @@ Things we need
   2-1. affine == affine
   2-2. convex <= concave
   2-3. concave >= convex
-3. objective (pair of minimize/maximize and expression)
-4. problem (pair of objective and list of constraints)
+3. problem (tuple of min/maximize, expression, list of constraints)
+
+Vector composition rule
+
+ f(x) = h(g1(x), g2(x), ..., gk(x))
+ h: R^k -> R is convex,
+ gi: R^n -> R
+
+ Assume that for each i, one of the following holds:
+   h is nondecreasing in the ith argument, and gi is convex
+   h is nonincreasing in the ith argument, and gi is concave
+   gi is affine
+ Then f is convex.

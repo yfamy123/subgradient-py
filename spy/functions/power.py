@@ -28,8 +28,8 @@ class expr_power(object):
     def subgrad(self, values):
         p = values[0]
         x = values[1]
-        if p == 0 or p == 1: return 0
-        else:                return pow(p, x)*math.log(p)
+        if p == 0.0 or p == 1.0: return [0.0]
+        else:                    return [pow(p, x)*math.log(p)]
 
 # Function instance
 expr_power = expr_power()

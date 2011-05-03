@@ -11,4 +11,4 @@ from quad_over_lin import expr_quad_over_lin
 
 __all__ = ["expr_exp", "expr_max", "expr_sum", "expr_prod",
            "expr_abs", "expr_log", "expr_power", "expr_sqrt",
-           "expr_square", "quad_over_lin"]
+           "expr_square", "expr_quad_over_lin"]

@@ -12,12 +12,12 @@ class expr_abs(object):
         if(isinstance(x, expr)):
             return expr(expr_abs, [x])
         else:
-            return math.abs(x)
+            return abs(x)
     def subgrad(self, values):
         x = values[0]
-        if x > 0:   return 1
-        elif x < 0: return -1
-        else:       return 0
+        if x > 0.0:   return [1.0]
+        elif x < 0.0: return [-1.0]
+        else:       return [0.0]
 
 # Function instance
 expr_abs = expr_abs()

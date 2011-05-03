@@ -18,6 +18,10 @@ class expr_abs(object):
         if x > 0.0:   return [1.0]
         elif x < 0.0: return [-1.0]
         else:       return [0.0]
+    def is_increasing(self, argindex): return False
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return True
+    def is_concave(self): return False
 
 # Function instance
 expr_abs = expr_abs()

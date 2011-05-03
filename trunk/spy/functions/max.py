@@ -15,6 +15,10 @@ class expr_max(object):
     def subgrad(self, values):
         y = expr_max(values)
         return [(float)(x == y) for x in values]
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return True
+    def is_concave(self): return False
 
 # Function instance
 expr_max = expr_max()

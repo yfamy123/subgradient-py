@@ -14,7 +14,6 @@ if __name__ == "__main__":
     
     cur = {'x': 0, 'y': 0}
     for i in range(10000):
-        print ex.get_value(cur)
         if cons.get_value(cur) > 0: g = cons.subgrad(cur)
         else: g = ex.subgrad(cur)
         nxt = {}

@@ -30,6 +30,10 @@ class expr_power(object):
         x = values[1]
         if p == 0.0 or p == 1.0: return [0.0]
         else:                    return [pow(p, x)*math.log(p)]
+    def is_increasing(self, argindex): pass
+    def is_decreasing(self, argindex): pass
+    def is_convex(self): pass
+    def is_concave(self): pass
 
 # Function instance
 expr_power = expr_power()

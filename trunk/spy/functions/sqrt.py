@@ -21,10 +21,10 @@ class expr_sqrt(object):
             raise ValueError('sqrt called with negative argument %f' %x)
         else:
             return [0.5/x]
-    def is_increasing(self, argindex):
-        return True
-    def is_decreasing(self, argindex):
-        return False
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return False
+    def is_concave(self): return True
 
 # Function instance
 expr_sqrt = expr_sqrt()

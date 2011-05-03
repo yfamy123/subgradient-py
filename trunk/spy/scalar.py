@@ -10,6 +10,10 @@ class expr(object):
         strs = map(lambda x: x.__str__(), self.children)
         if self.func.name == 'sum':
             ret = '(' + '+'.join(strs) + ')'
+        elif self.func.name == 'prod':
+            ret = '(' + '*'.join(strs) + ')'
+        elif self.func.name == 'abs':
+            ret = '|' + strs[0] + '|'
         else:
             ret = self.func.name + '(' + ', '.join(strs) + ')'
         return ret
@@ -45,6 +49,8 @@ class expr(object):
             ret[var] = sum(q[i]*subgrads[i][var] for i in range(len(q)))
         return ret
     def is_convex(self):
+        if self.func.is_convex() == False:
+            return False
         convexity = map(lambda x: x.is_convex(), self.children)
         concavity = map(lambda x: x.is_concave(), self.children)
         for i in xrange(length(self.children)):
@@ -57,14 +63,16 @@ class expr(object):
             return False
         return True
     def is_concave(self):
+        if self.func.is_concave() == False:
+            return False
         convexity = map(lambda x: x.is_convex(), self.children)
         concavity = map(lambda x: x.is_concave(), self.children)
         for i in xrange(length(self.children)):
             if convexity[i] and concavity[i]:
                 continue
-            if concavity[i] and self.func.is_increasing(i):
+            if convexity[i] and self.func.is_increasing(i):
                 continue
-            if convexity[i] and self.func.is_decreasing(i):
+            if concavity[i] and self.func.is_decreasing(i):
                 continue
             return False
         return True
@@ -87,10 +95,8 @@ class scalar(expr):
         for var in varmap:
             ret[var] = 0.0
         return ret
-    def is_convex(self):
-        return True
-    def is_concave(self):
-        return True
+    def is_convex(self): return True
+    def is_concave(self): return True
 
 # Scalar variable
 class scalar_var(expr):
@@ -114,9 +120,6 @@ class scalar_var(expr):
                 ret[var] = 0.0
             ret[self.name] = 1.0
             return ret
-        else:
-            return {}
-    def is_convex(self):
-        return True
-    def is_concave(self):
-        return True
+        else: return {}
+    def is_convex(self): return True
+    def is_concave(self): return True

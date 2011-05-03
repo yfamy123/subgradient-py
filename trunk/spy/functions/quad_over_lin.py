@@ -18,6 +18,10 @@ class expr_quad_over_lin(object):
         x = values[0]
         y = values[1]
         return [2*x/y, -(x*x)/(y*y)]
+    def is_increasing(self, argindex): return argindex == 0
+    def is_decreasing(self, argindex): return argindex == 1
+    def is_convex(self): return True
+    def is_concave(self): return False
 
 # Function instance
 expr_quad_over_lin = expr_quad_over_lin()

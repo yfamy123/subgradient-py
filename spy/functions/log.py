@@ -21,6 +21,10 @@ class expr_log(object):
             raise ValueError('log called with negative argument %f' %x)
         else:
             return [1.0/x]
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return False
+    def is_concave(self): return True
 
 # Function instance
 expr_log = expr_log()

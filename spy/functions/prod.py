@@ -18,6 +18,10 @@ class expr_prod(object):
         x = values[0]
         y = values[1]
         return [y, x]
+    def is_increasing(self, argindex): pass
+    def is_decreasing(self, argindex): pass
+    def is_convex(self): pass
+    def is_concave(self): pass
 
 # Function instance
 expr_prod = expr_prod()

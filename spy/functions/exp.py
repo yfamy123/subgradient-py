@@ -20,6 +20,10 @@ class expr_exp(object):
     def subgrad(self, values):
         x = values[0]
         return [expr_exp(x)]
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return True
+    def is_concave(self): return False
 
 # Function instance
 expr_exp = expr_exp()

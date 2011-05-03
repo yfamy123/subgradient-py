@@ -14,6 +14,10 @@ class expr_sum(object):
             return sum(x)
     def subgrad(self, values):
         return [1.0 for i in range(len(values))]
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return True
+    def is_concave(self): return True
 
 # Function instance
 expr_sum = expr_sum()

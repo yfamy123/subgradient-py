@@ -16,6 +16,10 @@ class expr_log_sum_exp(object):
         exps = [math.exp(x) for x in values]
         expsum = sum(exps)
         return [val/expsum for val in exps]
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return True
+    def is_concave(self): return False
 
 # Function instance
 expr_log_sum_exp = expr_log_sum_exp()

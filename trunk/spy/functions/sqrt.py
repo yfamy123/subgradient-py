@@ -21,6 +21,10 @@ class expr_sqrt(object):
             raise ValueError('sqrt called with negative argument %f' %x)
         else:
             return [0.5/x]
+    def is_increasing(self, argindex):
+        return True
+    def is_decreasing(self, argindex):
+        return False
 
 # Function instance
 expr_sqrt = expr_sqrt()

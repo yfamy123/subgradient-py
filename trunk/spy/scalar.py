@@ -52,14 +52,14 @@ class scalar(expr):
     def __str__(self):
         return str(self.value)
     def get_value(self, varmap = {}):
-        return self.value
+        return float(self.value)
     def get_vars(self):
         return set()
     def subgrad(self, varmap = {}):
         # subgradient of a constant is constant
         ret = {}
         for var in varmap:
-            ret[var] = 0
+            ret[var] = 0.0
         return ret
 
 # Scalar variable
@@ -81,8 +81,8 @@ class scalar_var(expr):
         if self.name in varmap:
             ret = {}
             for var in varmap:
-                ret[var] = 0
-            ret[self.name] = 1
+                ret[var] = 0.0
+            ret[self.name] = 1.0
             return ret
         else:
             return {}

@@ -14,7 +14,7 @@ class expr_max(object):
             return max(x)
     def subgrad(self, values):
         y = expr_max(values)
-        return [(x == y) for x in values]
+        return [(float)(x == y) for x in values]
 
 # Function instance
 expr_max = expr_max()

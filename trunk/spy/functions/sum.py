@@ -13,7 +13,7 @@ class expr_sum(object):
         else:
             return sum(x)
     def subgrad(self, values):
-        return [1 for i in range(len(values))]
+        return [1.0 for i in range(len(values))]
 
 # Function instance
 expr_sum = expr_sum()

@@ -3,7 +3,7 @@ from spy.scalar import *
 
 class expr_quad_over_lin(object):
     def __init__(self):
-        self.name = 'prod'
+        self.name = 'quad_over_lin'
     def __call__(self, *args):
         while type(args[0]) is list: args = args[0]
         assert len(args) == 2

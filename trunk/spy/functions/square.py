@@ -15,7 +15,7 @@ class expr_square(object):
             return x*x
     def subgrad(self, values):
         x = values[0]
-        return 2*x
+        return [2.0*x]
 
 # Function instance
 expr_square = expr_square()

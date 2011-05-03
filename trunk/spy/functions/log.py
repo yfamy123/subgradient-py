@@ -17,7 +17,7 @@ class expr_log(object):
             return math.log(x)
     def subgrad(self, values):
         x = values[0]
-        if x <= 0:
+        if x <= 0.0:
             raise ValueError('log called with negative argument %f' %x)
         else:
             return [1.0/x]

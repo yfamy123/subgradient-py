@@ -50,6 +50,10 @@ if __name__ == "__main__":
     ex = expr_prod(scalar(3), x)
     print ex
     print ex.subgrad({'x': 123})
+	
+    ex = expr_sum(expr_abs(expr_sum(x, scalar(-3))), expr_exp(x))
+    print ex
+    print ex.subgrad({'y': -2})
     
     #ex = x+3
     #print ex

@@ -90,7 +90,7 @@ val    = ex.get_value(varmap)
 g      = ex.subgrad(varmap)
 \end{verbatim}
 
-The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the (scalar-valued) result in \verb'val'. Note that the argument to the \verb'get_value' method is a dictionary. The next line computes a subgradient of \verb'ex' at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned.
+The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the (scalar-valued) result in \verb'val'. Note that the argument to the \verb'get_value' method is a dictionary. The next line computes a subgradient of \verb'ex' evaluated at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned.
 
 The subgradient computation, as mentioned above, is the most crucial part of this project. This feature has been tested by multiple scripts that solve simple optimization problems. Also, whenever a new library function is added, a unit test is implemented in order to ensure that the functions behave as expected.
 

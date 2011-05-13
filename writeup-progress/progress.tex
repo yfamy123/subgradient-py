@@ -16,7 +16,7 @@
 
 \title{Symbolic Subdifferentiation in Python}
 \author{Maurizio Cal\'o and Jaehyun Park\\
-EE364B Final Project Progress Report\\
+EE 364B Final Project Progress Report\\
 Stanford University, Spring 2010-11}
 
 \begin{document}
@@ -45,8 +45,8 @@ important classes:
 of Expression type. It can contain variables whose values are not
 predetermined.
 \item Constraint: A constraint is an inequality of the form
-$(\text{convex}) \le (\text{concave})$ or an equality of the form
-$(\text{affine}) = (\text{affine})$.
+$(\mbox{convex}) \le (\mbox{concave})$ or an equality of the form
+$(\mbox{affine}) = (\mbox{affine})$.
 \item (Optimization) Problem: A problem is a triplet of the form (minimize/maximize, objective, list of constraints).
 \EIT
 
@@ -55,7 +55,7 @@ and efficiently, since all other methods will rely heavily on subgradients.
 
 \section{Current Progress}
 \subsection{Expression Class}
-Currently, the expression class only allows scalar-valued expressions.
+Currently, the expression class only allows scalar-valued expressions. Having matrix-valued expressions will be nice, but it is not the first priority of the project.
 
 \subsection{Computation of Subgradients}
 The recursive computation of subgradients is based on the composition rule from the class \cite{subg}. Let $f(x) = h(f_1(x), \ldots, f_k(x))$ be a function, where $h$ is nondecreasing convex function, and each $f_i$ is convex. First, we compute the values of $f_1(x), \ldots, f_k(x)$. Then, compute $q \in \partial h(f_1(x), \ldots, f_k(x))$. This results in a vector of length $k$. For each $f_i(x)$, we compute $g_i \in \partial f_i(x)$. Each $g_i$ is a vector of length $k$. Finally, we return the ``weighted sum'' $g$ of the subgradients, namely
@@ -69,64 +69,57 @@ In the current version of the SPY, one can declare a variable using the followin
 \begin{verbatim}
 x = scalar_var('x')
 \end{verbatim}
-The meaning should be clear from the syntax; the variable whose name is \verb'x' is declared without a value assigned to it.
+The meaning should be clear from the syntax; the line above declares a variable whose name is \verb'x' without a value assigned to it.
 
-With variables, it is possible to form a more complicated expression. The following line will create an expression named \verb'ex'.
+With variables, it is possible to form more complicated expressions. The following line will create an expression named \verb'ex'.
 \begin{verbatim}
 ex = expr_sum(expr_abs(expr_sum(x, scalar(-3))), expr_exp(x))
 \end{verbatim}
-The expression above corresponds to a mathematical expression $|x-3|+e^x$. It should be noted that forming an expression does not immediately compute the value of it. All computations are done lazily; the values will be computed only when the \verb'get_value' method is called on it. Internally, the expression is stored as a tree like the following:
+The expression above corresponds to a mathematical expression $|x-3|+e^x$. It should be noted that forming an expression does not immediately compute the value of it. All computations are done lazily; the values will be computed only when the \verb'get_value' method is called on it. Internally, the expression is stored as a tree shown in the following diagram:
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{expr}
+\includegraphics[width=0.45\textwidth]{expr}
 \end{center}
 
-\subsection{Functions Implemented}
-Individual functions implemented:
-\BIT
-
-\item \verb'abs, exp, max, power, prod, sqrt, square, sum'. The meaning of these functions should be clear from their names.
-\item \verb'log_sum_exp:' logartithm of the sum of elementwise
-  exponentials. Convex and non-decreasing. 
-\item \verb'geom_mean:' geometric mean $(x_1x_2 \cdots x_n)^{1/n}$. Concave and
-  non-decreasing in each argument. 
-\item \verb'pow_pos:' $max\{x,0\}^p $ Convex and non-decreasing. 
-\item \verb'quad_over_linear:' $x^2/y$. Convex and non-increasing in $y$.
-\item \verb'rel_entr': Scalar relative entropy: \verb'rel_entr(x,y)=x.*log(x/y)'. Convex.
-\item \verb'square_pos:' Special case of \verb'pow_pos' when $p=2$.
-\EIT
-
-
 \subsection{Retrieving Values or Subgradients}
-Because the values of variables in an expression is not predetermined, a user needs to specify them manually in order to retrieve the actual value or a subgradient of the expression. The values of the variables are not passed in as a list of numbers as one might expect. Rather, the values are passed as a dictionary that maps the name of variables to their values.
+Because the values of variables in an expression is not predetermined, a user needs to specify them manually in order to retrieve the actual value or a subgradient of the expression. The values of the variables are not passed in as a list of numbers as one might expect. Rather, the values are passed as a dictionary that maps the name of variables to their values. The benefit of this design is that one can readily access the value of a variable by its name.
+
 \begin{verbatim}
-varmap = {'x': 0, 'y': 0}
-g = ex.subgrad(varmap)
-val = ex.get_value(varmap)
+varmap = {'x': 1.5, 'y': -2}
+val    = ex.get_value(varmap)
+g      = ex.subgrad(varmap)
 \end{verbatim}
 
+The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the (scalar-valued) result in \verb'val'. Note that the argument to the \verb'get_value' method is a dictionary. The next line computes a subgradient of \verb'ex' at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned.
+
+The subgradient computation, as mentioned above, is the most crucial part of this project. This feature has been tested by multiple scripts that solve simple optimization problems. Also, whenever a new library function is added, a unit test is implemented in order to ensure that the functions behave as expected.
+
+\subsection{Library Functions}
+The following list contains the functions that are implemented in the current version of SPY. For more details, please refer to the CVX user guide \cite{guide}.
+\BIT
+\item \verb'sum', \verb'abs', \verb'max', \verb'prod'
+\item \verb'exp', \verb'log', \verb'log_sum_exp'
+\item \verb'square', \verb'quad_over_lin'
+\item \verb'power', \verb'pow_pos', \verb'square_pos', \verb'sqrt'
+\item \verb'geom_mean'
+\item \verb'rel_entr'
+\EIT
+Functions that take a vector as an argument (e.g. \verb'max', \verb'geom_mean') currently take a list of scalars as an input, since we don't have vector-valued expressions yet.
 
 \section{Future Work}
 
-Now that we have a basic system to compute subgradients, the next step is to implement the \textit{Problem} class.
-
 \BIT
-
-\item To determine whether a problem object is a valid disciplined convex optimization problem, 
-we will implement a function that takes an object of Expression type as argument and determines whether the function is (DCP) concave/convex. This can be done by applying the general vector composition rule\cite{cvx}, using the monotonicity and convexity properties of the atomic functions. 
-
-\item We will implement both subgradient and cutting-plane methods for constrained oprimization problems. The user will be able to specify which of the two methods to use, as well as the step-size rule.
-
-\item To provide a clean interface to the user, we will overload Python built-in operators such as the ``$+$'' operator to generate objects of Expression type (e.g. ``$+$'' will be interpreted as \verb'expr_sum').
-
+\item Interface: To provide a clean interface to the user, we will overload operators as well as some of the Python built-in functions. This will allow users to form expressions in a more natural way. For example, \verb'abs(x - 3) + exp(x)' will give the same expression as the example shown in Section 3.1. The same principle applies to the constraint class; if an inequality or an equality has a variable in it, it will be interpreted as a constraint, rather than a boolean value.
+\item Expression class: To determine whether a problem object is a valid disciplined convex optimization problem, we will implement a function that takes an expression and determines whether the function is (DCP) concave/convex. This can be done by applying the general vector composition rule \cite{cvx}, using the monotonicity and convexity properties of the atomic functions.
+\item Constraint class: One important feature of the constraint class is going to be the cutting plane method. This method will return a deep cutting plane whenever a constraint is violated.
+\item Problem class: We will implement both subgradient and cutting-plane methods for constrained optimization problems. The user will be able to specify which of the two methods to use, as well as the step rules.
+\item Extension (tentative): After we have a basic system supporting all the features above, we will extend the code to support vectors and matrices.
 \EIT
-
-After we have a basic system to solve (scalar) convex optimization problems, we will extend the code to support matrices and vector-valued functions. 
-
 
 \begin{thebibliography}{99}
 \bibitem{subg} S. Boyd, \emph{Subgradients}, EE 364B Lecture Slides, 2011.
-\bibitem{cvx} S. Boyd, \emph{Convex Functions}, EE364A Lecture Slides, 2011.
+\bibitem{guide} M. Grant and S. Boyd, \verb'cvx' \emph{Users' Guide}, 2011.
+\bibitem{cvx} S. Boyd, \emph{Convex Functions}, EE 364A Lecture Slides, 2011.
 \end{thebibliography}
 
 \end{document}

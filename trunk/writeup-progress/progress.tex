@@ -81,6 +81,22 @@ The expression above corresponds to a mathematical expression $|x-3|+e^x$. It sh
 \includegraphics[width=0.5\textwidth]{expr}
 \end{center}
 
+\subsection{Functions Implemented}
+Individual functions implemented:
+\BIT
+
+\item \verb'abs, exp, max, power, prod, sqrt, square, sum'. The meaning of these functions should be clear from their names.
+\item \verb'log_sum_exp:' logartithm of the sum of elementwise
+  exponentials. Convex and non-decreasing. 
+\item \verb'geom_mean:' geometric mean $(x_1x_2 \cdots x_n)^{1/n}$. Concave and
+  non-decreasing in each argument. 
+\item \verb'pow_pos:' $max\{x,0\}^p $ Convex and non-decreasing. 
+\item \verb'quad_over_linear:' $x^2/y$. Convex and non-increasing in $y$.
+\item \verb'rel_entr': Scalar relative entropy: \verb'rel_entr(x,y)=x.*log(x/y)'. Convex.
+\item \verb'square_pos:' Special case of \verb'pow_pos' when $p=2$.
+\EIT
+
+
 \subsection{Retrieving Values or Subgradients}
 Because the values of variables in an expression is not predetermined, a user needs to specify them manually in order to retrieve the actual value or a subgradient of the expression. The values of the variables are not passed in as a list of numbers as one might expect. Rather, the values are passed as a dictionary that maps the name of variables to their values.
 \begin{verbatim}
@@ -89,8 +105,28 @@ g = ex.subgrad(varmap)
 val = ex.get_value(varmap)
 \end{verbatim}
 
+
+\section{Future Work}
+
+Now that we have a basic system to compute subgradients, the next step is to implement the \textit{Problem} class.
+
+\BIT
+
+\item To determine whether a problem object is a valid disciplined convex optimization problem, 
+we will implement a function that takes an object of Expression type as argument and determines whether the function is (DCP) concave/convex. This can be done by applying the general vector composition rule\cite{cvx}, using the monotonicity and convexity properties of the atomic functions. 
+
+\item We will implement both subgradient and cutting-plane methods for constrained oprimization problems. The user will be able to specify which of the two methods to use, as well as the step-size rule.
+
+\item To provide a clean interface to the user, we will overload Python built-in operators such as the ``$+$'' operator to generate objects of Expression type (e.g. ``$+$'' will be interpreted as \verb'expr_sum').
+
+\EIT
+
+After we have a basic system to solve (scalar) convex optimization problems, we will extend the code to support matrices and vector-valued functions. 
+
+
 \begin{thebibliography}{99}
 \bibitem{subg} S. Boyd, \emph{Subgradients}, EE 364B Lecture Slides, 2011.
+\bibitem{cvx} S. Boyd, \emph{Convex Functions}, EE364A Lecture Slides, 2011.
 \end{thebibliography}
 
 \end{document}

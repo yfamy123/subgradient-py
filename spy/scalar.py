@@ -114,12 +114,14 @@ class scalar_var(expr):
     def set_value(self, value):
         self.value = value
     def subgrad(self, varmap = {}):
+        ret = {}
         if self.name in varmap:
-            ret = {}
             for var in varmap:
                 ret[var] = 0.0
             ret[self.name] = 1.0
-            return ret
-        else: return {}
+        else:
+            for var in varmap:
+                ret[var] = NAN
+        return ret
     def is_convex(self): return True
     def is_concave(self): return True

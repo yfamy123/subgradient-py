@@ -1,6 +1,17 @@
-\documentclass[11pt]{article}
+\documentclass[10pt]{article}
 \usepackage{fullpage,graphicx,psfrag,url}
 \usepackage[small,bf]{caption}
+\usepackage{paralist}
+
+\setlength{\textheight}{9in} % increase text height to fit resume on 1 page
+\topmargin=0in % start text higher on the page
+
+\newenvironment{tight_itemize}
+{\begin{itemize}
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}}
+{\end{itemize}}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -14,13 +25,47 @@
 
 \bibliographystyle{alpha}
 
+\begin{document}
 \subsection*{General Comments}
-\subsection*{Page 1}
-\begin{itemize}
+\begin{tight_itemize}
+\item Use \verb'equation*' instead of \verb'equation' for equations that you don't refer to. (That way you can write equations that are not numbered.)
+\item In the \verb'equation' environment, it often reads better if you put some space at the end of the line. Use \verb'\,' before the punctuations.
+\item For the maximum value of an infinite set, use $\sup$ instead of $\max$.
+\item Left quotation marks are \verb'``' (use the key right next to \verb'1').
+\item Don't leave out page numbers.
+\item Convex function ``of'' $x$? Convex function ``in'' $x$?
+\item Definitely try to motivate the project a little more. It is not very clear (at least for someone without much background in information theory) why the specific optimization problem you pose is of particular importance. Why is the degraded relay channel model important and what is the significance/possible implications of estimating the capacity of the channel?
+\end{tight_itemize}
 
-\end{itemize}
+\subsection*{Page 1}
+\begin{tight_itemize}
+\item (line 2-4) Cite the source. Also, it looks like this specific sentence is out of place and doesn't connect to the following sentences. Moving it to below or another section would help.
+\item (the line after (2)) You can probably assume that the readers already know what $p(y|x)$ means.
+\item (section title ``The Relay Channel'') Is there a better name that suggests ``problem description?''
+\item (last line) It is possible to formulate the problem without using the dimensions $n$, $m$, $k$, and $l$. You can use the notation in (5) to rewrite (1), (10), (11), and especially this sentence to simplify it down.
+\end{tight_itemize}
+
 \subsection*{Page 2}
+\begin{tight_itemize}
+\item (line 2) Put ``See Figure 1'' in parentheses.
+\item (line 4) Don't start a sentence with numbers, symbols, etc.
+\item (second paragraph) You want to define what it means by a ``better relay link,'' and mention the terms ``cooperative bound'' as well as ``source-relay'' bound.
+\item (the line above (4)) Did you mean $p(y, x_1|x_2, y_1) = p(y|\cdot)p(x_1|\cdot)$? Or did you mean to say $Y$ and $Y_1$ are independent given $(X_1, X_2)$?
+\item (in (5)) Why is the letter ``p'' roman? It should be italic $p$.
+\end{tight_itemize}
+
 \subsection*{Page 3}
+\begin{tight_itemize}
+\item Figure 2 and (6) look unnecessary, as the only time they are referred is (9). Either explicitly solve this baby problem to give the feeling about how the solution looks like, or take it out to have some more space.
+\item (line 2) The word ``cooperative bound'' is used for the first time, so unless you want to define the term right here, mention this word in page 2 not to confuse the readers. (We got confused by this sentence because we thought we missed the definition of the term somewhere in page 2.)
+\end{tight_itemize}
+
 \subsection*{Page 4}
+\begin{tight_itemize}
+\item Move Figure 3 to the bottom of the page for more coherence. Also, elaborating more on the significance of the figure would help; figures and plots in a paper should be self-contained that readers without extensive knowledge on the field can understand the meaning of them.
+\item (line 1-2) You can rewrite these sentences in a more concise way. e.g. The cooperative bound $I(X_1, X_2;Y)$ maintains, ... Also, we see from (9) that the source-relay bound $I(X_1; Y_1|X_2)$ is an affine function in $p(x_2)$, ...
+\item (line 2 in (10)) Put a comma before ``$j = 1, \ldots, m$''.
+\item (line $n-1$) Put ``See Figure 3'' in parentheses.
+\end{tight_itemize}
 
 \end{document}

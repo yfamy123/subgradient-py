@@ -14,16 +14,16 @@ class expr_exp(object):
             x = args[0]
         
         if(isinstance(x, expr)):
-            return expr(expr_exp, [x])
+            return expr(self, [x])
         else:
             return math.exp(x)
     def subgrad(self, values):
         x = values[0]
-        return [expr_exp(x)]
+        return [self(x)]
     def is_increasing(self, argindex): return True
     def is_decreasing(self, argindex): return False
     def is_convex(self): return True
     def is_concave(self): return False
 
 # Function instance
-expr_exp = expr_exp()
+exp = expr_exp()

@@ -14,12 +14,12 @@ class expr_power(object):
             return p
         elif 0 < p < 1:
             if(isinstance(x, expr)):
-                return expr(expr_power, [scalar(p), x])
+                return expr(self, [scalar(p), x])
             else:
                 return pow(p, x)
         elif p > 1:
             if(isinstance(x, expr)):
-                return expr(expr_power, [scalar(p), x])
+                return expr(self, [scalar(p), x])
             else:
                 return pow(p, x)
         else:
@@ -36,4 +36,4 @@ class expr_power(object):
     def is_concave(self): pass
 
 # Function instance
-expr_power = expr_power()
+power = expr_power()

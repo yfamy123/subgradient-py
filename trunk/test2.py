@@ -4,13 +4,13 @@ from spy import *
 if __name__ == "__main__":
     x = scalar_var('x')
     y = scalar_var('y')
-    ex1 = expr_sum(expr_sum(expr_prod(scalar(3), x), expr_prod(scalar(-4), y), scalar(10)), expr_abs(expr_sum(x, scalar(-1))), expr_quad_over_lin(x, scalar(1)), expr_quad_over_lin(y, scalar(3)))
-    ex2 = expr_sum(expr_sum(expr_prod(scalar(-2), x), expr_prod(scalar(6), y), scalar(-5)), expr_abs(expr_sum(y, scalar(-3))), expr_quad_over_lin(x, scalar(0.5)), expr_quad_over_lin(y, scalar(5)))
+    ex1 = sum(sum(prod(scalar(3), x), prod(scalar(-4), y), scalar(10)), abs(sum(x, scalar(-1))), quad_over_lin(x, scalar(1)), quad_over_lin(y, scalar(3)))
+    ex2 = sum(sum(prod(scalar(-2), x), prod(scalar(6), y), scalar(-5)), abs(sum(y, scalar(-3))), quad_over_lin(x, scalar(0.5)), quad_over_lin(y, scalar(5)))
     print ex1
     print ex2
-    ex = expr_max(ex1, ex2)
+    ex = max(ex1, ex2)
     print ex
-    cons = expr_sum(x, y)
+    cons = sum(x, y)
     
     cur = {'x': 0, 'y': 0}
     for i in range(10000):

@@ -11,13 +11,13 @@ class problem(object):
         self.constraints = []
         for cons in constraints:
             if cons.relop != GT:
-                self.constraints.append(expr_sum(cons.lhs, expr_prod(scalar(-1), cons.rhs)))
+                self.constraints.append(sum(cons.lhs, prod(scalar(-1), cons.rhs)))
             if cons.relop != LT:
-                self.constraints.append(expr_sum(cons.rhs, expr_prod(scalar(-1), cons.lhs)))
+                self.constraints.append(sum(cons.rhs, prod(scalar(-1), cons.lhs)))
         
     def solve(self):
         if self.type == MAXIMIZE:
-            self.obj = expr_prod(scalar(-1), self.obj)
+            self.obj = prod(scalar(-1), self.obj)
         vars = self.obj.get_vars()
         cur = {}
         for var in vars: cur[var] = 0.0
@@ -31,11 +31,11 @@ class problem(object):
             norm = math.sqrt(sum([x**2 for x in g.itervalues()]))
             if norm < EPS: break
             nxt = {}
-            for key in cur.keys():
-                nxt[key] = cur[key]-1.0*g[key]/iter;
+            for (key, val) in g.iteritems():
+                nxt[key] = cur[key]-1.0*val/iter;
             cur = nxt
         if self.type == MAXIMIZE:
-            self.obj = expr_prod(scalar(-1), self.obj)
+            self.obj = prod(scalar(-1), self.obj)
         print 'objective value: ' + str(self.obj.get_value(cur))
         print 'optimal point: '
         for key, val in cur.iteritems():

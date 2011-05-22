@@ -9,9 +9,11 @@ class expr_sum(object):
         
         x = args
         if(isinstance(x[0], expr)):
-            return expr(expr_sum, x)
+            return expr(self, x)
         else:
-            return sum(x)
+            ret = 0
+            for xi in x: ret = ret+xi
+            return ret
     def subgrad(self, values):
         return [1.0 for i in range(len(values))]
     def is_increasing(self, argindex): return True
@@ -20,4 +22,4 @@ class expr_sum(object):
     def is_concave(self): return True
 
 # Function instance
-expr_sum = expr_sum()
+sum = expr_sum()

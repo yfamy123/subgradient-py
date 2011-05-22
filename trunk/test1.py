@@ -2,19 +2,19 @@
 
 from spy import *
 if __name__ == "__main__":
-    ex = expr_sum(3, 4)
+    ex = sum(3, 4)
     print ex
     
-    ex = expr_sum(scalar(3), scalar(4))
+    ex = sum(scalar(3), scalar(4))
     print ex
     
-    ex = expr_exp(expr_sum(scalar_var('x'), scalar_var('y')))
+    ex = exp(sum(scalar_var('x'), scalar_var('y')))
     print ex.get_vars()
     print ex.get_value()
     print ex.get_value({'x': 2, 'y': -1})
     print ex.get_value({'x': 2})
     
-    ex = expr_exp(scalar_var('x'))
+    ex = exp(scalar_var('x'))
     print ex
     print 'computing subgrad at x=2, y=-1'
     print ex.subgrad({'x': 2, 'y': -1})
@@ -22,36 +22,36 @@ if __name__ == "__main__":
     x = scalar_var('x')
     y = scalar_var('y')
     
-    ex = expr_exp(expr_exp(x))
+    ex = exp(exp(x))
     print ex
     print ex.get_value({'x': 1})
     print ex.get_value({'x': 0})
     print ex.subgrad({'x': 0})
     
-    ex = expr_max(x, y)
+    ex = max(x, y)
     print ex
     print ex.get_value({'x': 1124, 'y': 233})
     print ex.subgrad({'x': 1124, 'y': 233})
     
-    ex = expr_sum(expr_prod(scalar(3), x), expr_prod(scalar(4), y))
+    ex = sum(prod(scalar(3), x), prod(scalar(4), y))
     print ex
     print ex.get_value({'x': 1124, 'y': 233})
     print ex.subgrad({'x': 1124, 'y': 233})
     
-    ex = expr_sqrt(expr_sum(x, y))
+    ex = sqrt(sum(x, y))
     print ex
     print ex.get_value({'x': 3, 'y': 4})
     print ex.subgrad({'x': 3, 'y': 4})
 
-    ex = expr_max(scalar(0), expr_prod(scalar(3), x))
+    ex = max(scalar(0), prod(scalar(3), x))
     print ex
     print ex.subgrad({'x': 123})
     
-    ex = expr_prod(scalar(3), x)
+    ex = prod(scalar(3), x)
     print ex
     print ex.subgrad({'x': 123})
 	
-    ex = expr_sum(expr_abs(expr_sum(x, scalar(-3))), expr_exp(x))
+    ex = sum(abs(sum(x, scalar(-3))), exp(x))
     print ex
     print ex.subgrad({'y': -2})
     

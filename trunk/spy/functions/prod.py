@@ -11,7 +11,7 @@ class expr_prod(object):
         x = args[0]
         y = args[1]
         if(isinstance(x, expr)):
-            return expr(expr_prod, [x, y])
+            return expr(self, [x, y])
         else:
             return x*y
     def subgrad(self, values):
@@ -24,4 +24,4 @@ class expr_prod(object):
     def is_concave(self): pass
 
 # Function instance
-expr_prod = expr_prod()
+prod = expr_prod()

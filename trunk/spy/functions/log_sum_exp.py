@@ -9,7 +9,7 @@ class expr_log_sum_exp(object):
         
         x = args
         if(isinstance(x[0], expr)):
-            return expr(expr_log_sum_exp, x)
+            return expr(self, x)
         else:
             return math.log(sum([math.exp(xi) for xi in x]))
     def subgrad(self, values):
@@ -22,4 +22,4 @@ class expr_log_sum_exp(object):
     def is_concave(self): return False
 
 # Function instance
-expr_log_sum_exp = expr_log_sum_exp()
+log_sum_exp = expr_log_sum_exp()

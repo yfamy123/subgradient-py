@@ -1,4 +1,5 @@
 import math
+import __builtin__
 from spy.scalar import *
 
 class expr_max(object):
@@ -10,11 +11,7 @@ class expr_max(object):
         x = args
         if isinstance(x[0], expr):
             return expr(self, x)
-        else:
-            ret = x[0]
-            for xi in x[1:]:
-                if ret < xi: ret = xi
-            return ret
+        return __builtin__.max(x)
     def subgrad(self, values):
         y = self(values)
         return [(float)(x == y) for x in values]

@@ -1,5 +1,6 @@
 import math
-from spy.constants import *
+import __builtin__
+import random
 from spy.scalar import expr
 
 class expr_abs(object):
@@ -12,13 +13,12 @@ class expr_abs(object):
         x = args[0]
         if(isinstance(x, expr)):
             return expr(self, [x])
-        elif x > 0: return x
-        return -x
+        return __builtin__.abs(x)
     def subgrad(self, values):
         x = values[0]
         if x > 0.0:   return [1.0]
         elif x < 0.0: return [-1.0]
-        else:       return [0.0]
+        else:         return [random.uniform(-1.0, 1.0)]
     def is_increasing(self, argindex): return False
     def is_decreasing(self, argindex): return False
     def is_convex(self): return True

@@ -11,7 +11,7 @@ class expr_quad_over_lin(object):
         x = args[0]
         y = args[1]
         if(isinstance(x, expr)):
-            return expr(expr_quad_over_lin, [x, y])
+            return expr(self, [x, y])
         else:
             return x*x/y
     def subgrad(self, values):
@@ -24,4 +24,4 @@ class expr_quad_over_lin(object):
     def is_concave(self): return False
 
 # Function instance
-expr_quad_over_lin = expr_quad_over_lin()
+quad_over_lin = expr_quad_over_lin()

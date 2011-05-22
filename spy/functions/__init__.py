@@ -1,14 +1,14 @@
-from exp import expr_exp
-from max import expr_max
-from sum import expr_sum
-from prod import expr_prod
-from abs import expr_abs
-from log import expr_log
-from power import expr_power
-from sqrt import expr_sqrt
-from square import expr_square
-from quad_over_lin import expr_quad_over_lin
+from exp import exp
+from max import max
+from sum import sum
+from prod import prod
+from abs import abs
+from log import log
+from power import power
+from sqrt import sqrt
+from square import square
+from quad_over_lin import quad_over_lin
 
-__all__ = ["expr_exp", "expr_max", "expr_sum", "expr_prod",
-           "expr_abs", "expr_log", "expr_power", "expr_sqrt",
-           "expr_square", "expr_quad_over_lin"]
+__all__ = ["exp", "max", "sum", "prod",
+           "abs", "log", "power", "sqrt",
+           "square", "quad_over_lin"]

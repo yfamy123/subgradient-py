@@ -10,7 +10,7 @@ class expr_sqrt(object):
         
         x = args[0]
         if(isinstance(x, expr)):
-            return expr(expr_sqrt, [x])
+            return expr(self, [x])
         elif x < 0:
             raise ValueError('sqrt called with negative argument %f' %x)
         else:
@@ -27,4 +27,4 @@ class expr_sqrt(object):
     def is_concave(self): return True
 
 # Function instance
-expr_sqrt = expr_sqrt()
+sqrt = expr_sqrt()

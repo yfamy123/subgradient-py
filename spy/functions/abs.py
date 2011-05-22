@@ -1,5 +1,6 @@
 import math
-from spy.scalar import *
+from spy.constants import *
+from spy.scalar import expr
 
 class expr_abs(object):
     def __init__(self):
@@ -10,9 +11,9 @@ class expr_abs(object):
         
         x = args[0]
         if(isinstance(x, expr)):
-            return expr(expr_abs, [x])
-        else:
-            return abs(x)
+            return expr(self, [x])
+        elif x > 0: return x
+        return -x
     def subgrad(self, values):
         x = values[0]
         if x > 0.0:   return [1.0]
@@ -24,4 +25,4 @@ class expr_abs(object):
     def is_concave(self): return False
 
 # Function instance
-expr_abs = expr_abs()
+abs = expr_abs()

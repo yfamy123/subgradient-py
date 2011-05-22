@@ -10,7 +10,7 @@ class expr_log(object):
         
         x = args[0]
         if(isinstance(x, expr)):
-            return expr(expr_log, [x])
+            return expr(self, [x])
         elif x <= 0:
             raise ValueError('log called with negative argument %f' %x)
         else:
@@ -27,4 +27,4 @@ class expr_log(object):
     def is_concave(self): return True
 
 # Function instance
-expr_log = expr_log()
+log = expr_log()

@@ -9,11 +9,14 @@ class expr_max(object):
         
         x = args
         if isinstance(x[0], expr):
-            return expr(expr_max, x)
+            return expr(self, x)
         else:
-            return max(x)
+            ret = x[0]
+            for xi in x[1:]:
+                if ret < xi: ret = xi
+            return ret
     def subgrad(self, values):
-        y = expr_max(values)
+        y = self(values)
         return [(float)(x == y) for x in values]
     def is_increasing(self, argindex): return True
     def is_decreasing(self, argindex): return False
@@ -21,4 +24,4 @@ class expr_max(object):
     def is_concave(self): return False
 
 # Function instance
-expr_max = expr_max()
+max = expr_max()

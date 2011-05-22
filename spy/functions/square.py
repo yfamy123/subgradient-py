@@ -10,7 +10,7 @@ class expr_square(object):
         
         x = args[0]
         if(isinstance(x, expr)):
-            return expr(expr_square, [x])
+            return expr(self, [x])
         else:
             return x*x
     def subgrad(self, values):
@@ -22,4 +22,4 @@ class expr_square(object):
     def is_concave(self): return False
 
 # Function instance
-expr_square = expr_square()
+square = expr_square()

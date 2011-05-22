@@ -1,5 +1,5 @@
-from constants import *
-from utils import *
+from spy.constants import *
+from spy.utils import *
 
 # Base class for scalar-valued expression
 class expr(object):

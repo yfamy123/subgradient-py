@@ -1,4 +1,5 @@
 import math
+from spy.utils import *
 from spy.scalar import *
 
 class expr_log_sum_exp(object):
@@ -8,10 +9,18 @@ class expr_log_sum_exp(object):
         while type(args[0]) is list: args = args[0]
         
         x = args
-        if(isinstance(x[0], expr)):
-            return expr(self, x)
-        else:
-            return math.log(sum([math.exp(xi) for xi in x]))
+        flag = False
+        for xi in x:
+            if isinstance(xi, expr):
+                flag = True
+                break
+        if not flag: return math.log(sum([math.exp(xi) for xi in x]))
+        y = []
+        for i in range(len(x)):
+            if isNumber(x[i]): y.append(scalar(x[i]))
+            else: y.append(x[i])
+        return expr(self, y)
+            
     def subgrad(self, values):
         exps = [math.exp(x) for x in values]
         expsum = sum(exps)

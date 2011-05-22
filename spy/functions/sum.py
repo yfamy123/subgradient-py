@@ -9,9 +9,18 @@ class expr_sum(object):
         while type(args[0]) is list: args = args[0]
         
         x = args
-        if(isinstance(x[0], expr)):
-            return expr(self, x)
-        return __builtin__.sum(x)
+        flag = False
+        for xi in x:
+            if isinstance(xi, expr):
+                flag = True
+                break
+        if not flag: return __builtin__.sum(x)
+        y = []
+        for i in range(len(x)):
+            if isNumber(x[i]): y.append(scalar(x[i]))
+            else: y.append(x[i])
+        return expr(self, y)
+        
     def subgrad(self, values):
         return [1.0 for i in range(len(values))]
     def is_increasing(self, argindex): return True

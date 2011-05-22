@@ -13,12 +13,12 @@ class expr_power(object):
         if p == 0 or p == 1:
             return p
         elif 0 < p < 1:
-            if(isinstance(x, expr)):
+            if isinstance(x, expr):
                 return expr(self, [scalar(p), x])
             else:
                 return pow(p, x)
         elif p > 1:
-            if(isinstance(x, expr)):
+            if isinstance(x, expr):
                 return expr(self, [scalar(p), x])
             else:
                 return pow(p, x)

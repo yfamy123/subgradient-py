@@ -1,3 +1,4 @@
+import math
 from scalar import *
 from constraint import *
 from functions import *

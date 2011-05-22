@@ -1,8 +1,12 @@
-from scalar import *
+from spy.constants import *
+from spy.scalar import *
+from spy.utils import *
 
 class constraint(object):
     def __init__(self, lhs, relop, rhs):
         assert relop in [EQ, LT, GT]
+        if isNumber(lhs): lhs = scalar(lhs)
+        if isNumber(rhs): rhs = scalar(rhs)
         #if relop == EQ:
         #    assert lhs.is_affine() and rhs.is_affine()
         #if relop == LT:

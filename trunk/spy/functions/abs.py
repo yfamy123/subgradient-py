@@ -11,7 +11,7 @@ class expr_abs(object):
         assert len(args) == 1
         
         x = args[0]
-        if(isinstance(x, expr)):
+        if isinstance(x, expr):
             return expr(self, [x])
         return __builtin__.abs(x)
     def subgrad(self, values):

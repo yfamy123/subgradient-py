@@ -9,7 +9,7 @@ class expr_sqrt(object):
         assert len(args) == 1
         
         x = args[0]
-        if(isinstance(x, expr)):
+        if isinstance(x, expr):
             return expr(self, [x])
         elif x < 0:
             raise ValueError('sqrt called with negative argument %f' %x)

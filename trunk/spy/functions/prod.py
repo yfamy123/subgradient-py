@@ -1,5 +1,6 @@
 import math
 from spy.scalar import *
+from spy.utils import *
 
 class expr_prod(object):
     def __init__(self):
@@ -10,10 +11,12 @@ class expr_prod(object):
         
         x = args[0]
         y = args[1]
-        if(isinstance(x, expr)):
-            return expr(self, [x, y])
-        else:
+        if isNumber(x) and isNumber(y):
             return x*y
+        if isNumber(x): x = scalar(x)
+        if isNumber(y): y = scalar(y)
+        return expr(self, [x, y])
+
     def subgrad(self, values):
         x = values[0]
         y = values[1]

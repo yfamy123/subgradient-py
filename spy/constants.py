@@ -17,8 +17,14 @@ NEITHER    = 'neither'
 
 # Constants
 NAN = float('nan')
+EPS = 1e-8
+MAXITERS = 10000
 
 # RELOPs
-LT = 'less'
-GT = 'greater'
-EQ = 'equal'
+LT = 'lt'
+GT = 'gt'
+EQ = 'eq'
+
+# Problem types
+MINIMIZE = 'minimize'
+MAXIMIZE = 'maximize'

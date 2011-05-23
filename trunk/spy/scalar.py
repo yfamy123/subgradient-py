@@ -1,5 +1,6 @@
 from spy.constants import *
 from spy.utils import *
+import __builtin__
 
 # Base class for scalar-valued expression
 class expr(object):
@@ -8,7 +9,11 @@ class expr(object):
         self.children = children
     def __str__(self):
         strs = map(lambda x: x.__str__(), self.children)
-        if self.func.name == 'sum':
+        if self.func == '+':
+            ret = '(' + '+'.join(strs) + ')'
+        elif self.func == '*':
+            ret = '(' + '*'.join(strs) + ')'
+        elif self.func.name == 'sum':
             ret = '(' + '+'.join(strs) + ')'
         elif self.func.name == 'prod':
             ret = '(' + '*'.join(strs) + ')'
@@ -19,19 +24,59 @@ class expr(object):
         return ret
     def get_value(self, varmap = {}):
     	values = map(lambda x: x.get_value(varmap), self.children)
+        if self.func == '+': return __builtin__.sum(values)
+        elif self.func == '*': return values[0]*values[1]
         return self.func(values)
     def get_vars(self):
         ret = set()
         for child in self.children:
             ret = ret.union(child.get_vars())
         return ret
-#    def __add__(self, other):
-#        if isNumber(other):
-#            r = scalar(other)
-#        else:
-#            r = other
-#        return expr_sum(self, r)
+
+    # can multiply by constant only
+    # warning: the first argument is an expression, the second is a scalar
+    def __mul__(self, other):
+        assert isNumber(other)
+        if other == 1.0: return self
+        if other == 0.0: return 0.0
+        return expr('*', [self, scalar(other)])
+    def __rmul__(self, other):
+        assert isNumber(other)
+        if other == 1.0: return self
+        if other == 0.0: return 0.0
+        return expr('*', [self, scalar(other)])
+    def __neg__(self):
+        return (-1.0)*self
+
+    def __add__(self, other):
+        if isNumber(other): other = scalar(other)
+        return expr('+', [self, other])
+    def __radd__(self, other):
+        if isNumber(other): other = scalar(other)
+        return expr('+', [other, self])
+    def __sub__(self, other):
+        if isNumber(other): other = scalar(other)
+        return expr('+', [self, -other])
+    def __rsub__(self, other):
+        if isNumber(other): other = scalar(other)
+        return expr('+', [other, -self])
+    
     def subgrad(self, varmap = {}):
+        if self.func == '+':
+            subgrads = map(lambda x: x.subgrad(varmap), self.children)
+            ret = {}
+            for var in varmap:
+                ret[var] = sum(subgrad[var] for subgrad in subgrads)
+            return ret
+        if self.func == '*': # first arg is expression, second is scalar
+            c = self.children[1].get_value()
+            if c > 0: q = self.children[0].subgrad(varmap)
+            else: q = self.children[0].supergrad(varmap)
+            ret = {}
+            for var in varmap:
+                ret[var] = q[var]*c
+            return ret
+
         # composition rule
         # f(x) = h(f1(x), f2(x), ..., fk(x))
         # find q in subgrad h(f1(x), ..., fk(x))
@@ -48,6 +93,8 @@ class expr(object):
         for var in varmap:
             ret[var] = sum(q[i]*subgrads[i][var] for i in range(len(q)))
         return ret
+    # this is a little dirty trick
+    def supergrad(self, varmap = {}): return self.subgrad(varmap)
     def is_convex(self):
         if self.func.is_convex() == False:
             return False

@@ -1,4 +1,3 @@
-import math
 import __builtin__
 from spy.scalar import *
 

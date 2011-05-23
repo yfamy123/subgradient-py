@@ -11,24 +11,24 @@ class problem(object):
         self.obj = obj
         self.constraints = []
         for cons in constraints:
-            if cons.relop != GT:
-                self.constraints.append(sum(cons.lhs, prod(scalar(-1), cons.rhs)))
-            if cons.relop != LT:
-                self.constraints.append(sum(cons.rhs, prod(scalar(-1), cons.lhs)))
+            if cons.relop == LT or cons.relop == EQ:
+                self.constraints.append(cons.lhs-cons.rhs)
+            if cons.relop == GT or cons.relop == EQ:
+                self.constraints.append(cons.rhs-cons.lhs)
         
     def solve(self):
         if self.type == MAXIMIZE:
-            self.obj = prod(scalar(-1), self.obj)
+            self.obj = -self.obj
         vars = self.obj.get_vars()
         cur = {}
         for var in vars: cur[var] = 0.0
         for iter in range(1, MAXITERS+1):
-            g = {}
+            g = None
             for cons in self.constraints:
                 if cons.get_value(cur) > 0:
                     g = cons.subgrad(cur)
                     break
-            if g == {}: g = self.obj.subgrad(cur)
+            if g == None: g = self.obj.subgrad(cur)
             norm = math.sqrt(sum([x**2 for x in g.itervalues()]))
             if norm < EPS: break
             nxt = {}
@@ -36,7 +36,7 @@ class problem(object):
                 nxt[key] = cur[key]-1.0*val/iter;
             cur = nxt
         if self.type == MAXIMIZE:
-            self.obj = prod(scalar(-1), self.obj)
+            self.obj = -self.obj
         print 'objective value: ' + str(self.obj.get_value(cur))
         print 'optimal point: '
         for key, val in cur.iteritems():

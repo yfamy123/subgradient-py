@@ -1,4 +1,3 @@
-import math
 from spy.scalar import *
 
 class expr_square(object):

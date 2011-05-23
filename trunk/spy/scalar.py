@@ -12,13 +12,7 @@ class expr(object):
         if self.func == '+':
             ret = '(' + '+'.join(strs) + ')'
         elif self.func == '*':
-            ret = '(' + '*'.join(strs) + ')'
-        elif self.func.name == 'sum':
-            ret = '(' + '+'.join(strs) + ')'
-        elif self.func.name == 'prod':
-            ret = '(' + '*'.join(strs) + ')'
-        elif self.func.name == 'abs':
-            ret = '|' + strs[0] + '|'
+            ret = '*'.join(strs)
         else:
             ret = self.func.name + '(' + ', '.join(strs) + ')'
         return ret
@@ -55,7 +49,7 @@ class expr(object):
         if isNumber(other): other = scalar(other)
         return expr('+', [other, self])
     def __sub__(self, other):
-        if isNumber(other): other = scalar(other)
+        if isNumber(other): return expr('+', [self, scalar(-other)])
         return expr('+', [self, -other])
     def __rsub__(self, other):
         if isNumber(other): other = scalar(other)
@@ -94,8 +88,47 @@ class expr(object):
             ret[var] = sum(q[i]*subgrads[i][var] for i in range(len(q)))
         return ret
     # this is a little dirty trick
-    def supergrad(self, varmap = {}): return self.subgrad(varmap)
+    def supergrad(self, varmap = {}):
+        if self.func == '+':
+            supergrads = map(lambda x: x.supergrad(varmap), self.children)
+            ret = {}
+            for var in varmap:
+                ret[var] = sum(supergrad[var] for supergrad in supergrads)
+            return ret
+        if self.func == '*': # first arg is expression, second is scalar
+            c = self.children[1].get_value()
+            if c > 0: q = self.children[0].supergrad(varmap)
+            else: q = self.children[0].subgrad(varmap)
+            ret = {}
+            for var in varmap:
+                ret[var] = q[var]*c
+            return ret
+
+        # composition rule
+        # f(x) = h(f1(x), f2(x), ..., fk(x))
+        # find q in subgrad h(f1(x), ..., fk(x))
+        # find gi in subgrad fi(x)
+        # return q1g1 + q2g2 + ... + qkgk
+        
+        values = map(lambda x: x.get_value(varmap), self.children)
+        q = self.func.subgrad(values)
+        # q is a list of numbers
+        supergrads = map(lambda x: x.super(varmap), self.children)
+        # subgrads is a list of maps
+        # now return the "weighted sum" of the maps
+        ret = {}
+        for var in varmap:
+            ret[var] = sum(q[i]*supergrads[i][var] for i in range(len(q)))
+        return ret
     def is_convex(self):
+        if self.func == '+':
+            for child in self.children:
+                if not child.is_convex(): return False
+            return True
+        if self.func == '*':
+            if child[1].get_value() > 0: return child[0].is_convex()
+            return child[0].is_concave()
+
         if self.func.is_convex() == False:
             return False
         convexity = map(lambda x: x.is_convex(), self.children)
@@ -110,6 +143,14 @@ class expr(object):
             return False
         return True
     def is_concave(self):
+        if self.func == '+':
+            for child in self.children:
+                if not child.is_concave(): return False
+            return True
+        if self.func == '*':
+            if child[1].get_value() > 0: return child[0].is_concave()
+            return child[0].is_convex()
+
         if self.func.is_concave() == False:
             return False
         convexity = map(lambda x: x.is_convex(), self.children)
@@ -142,6 +183,12 @@ class scalar(expr):
         for var in varmap:
             ret[var] = 0.0
         return ret
+    def supergrad(self, varmap = {}):
+        # supergradient of a constant is constant
+        ret = {}
+        for var in varmap:
+            ret[var] = 0.0
+        return ret
     def is_convex(self): return True
     def is_concave(self): return True
 
@@ -161,6 +208,16 @@ class scalar_var(expr):
     def set_value(self, value):
         self.value = value
     def subgrad(self, varmap = {}):
+        ret = {}
+        if self.name in varmap:
+            for var in varmap:
+                ret[var] = 0.0
+            ret[self.name] = 1.0
+        else:
+            for var in varmap:
+                ret[var] = NAN
+        return ret
+    def supergrad(self, varmap = {}):
         ret = {}
         if self.name in varmap:
             for var in varmap:

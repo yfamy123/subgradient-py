@@ -15,7 +15,7 @@ class expr_log(object):
             raise ValueError('log called with negative argument %f' %x)
         else:
             return math.log(x)
-    def subgrad(self, values):
+    def supergrad(self, values):
         x = values[0]
         if x <= 0.0:
             raise ValueError('log called with negative argument %f' %x)

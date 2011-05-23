@@ -1,4 +1,3 @@
-import math
 import __builtin__
 from spy.scalar import *
 
@@ -21,7 +20,9 @@ class expr_min(object):
             else: y.append(x[i])
         return expr(self, y)
         
-    def subgrad(self, values): pass
+    def supergrad(self, values):
+        y = self(values)
+        return [(float)(x == y) for x in values]
     def is_increasing(self, argindex): return True
     def is_decreasing(self, argindex): return False
     def is_convex(self): return False

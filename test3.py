@@ -17,3 +17,9 @@ if __name__ == "__main__":
     minimize(ex3, constraints).solve()
     minimize(ex4, constraints).solve()
     minimize(ex5, constraints).solve()
+    
+    maximize(-ex1, constraints).solve()
+    maximize(-ex2, constraints).solve()
+    maximize(-ex3, constraints).solve()
+    maximize(-ex4, constraints).solve()
+    maximize(-ex5, constraints).solve()

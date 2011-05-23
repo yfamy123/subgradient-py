@@ -1,5 +1,4 @@
 import math
-import __builtin__
 import random
 from spy.scalar import expr
 
@@ -13,7 +12,7 @@ class expr_abs(object):
         x = args[0]
         if isinstance(x, expr):
             return expr(self, [x])
-        return __builtin__.abs(x)
+        return math.fabs(x)
     def subgrad(self, values):
         x = values[0]
         if x > 0.0:   return [1.0]

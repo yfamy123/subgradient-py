@@ -15,7 +15,7 @@ class expr_sqrt(object):
             raise ValueError('sqrt called with negative argument %f' %x)
         else:
             return math.sqrt(x)
-    def subgrad(self, values):
+    def supergrad(self, values):
         x = values[0]
         if x < 0.0:
             raise ValueError('sqrt called with negative argument %f' %x)

@@ -156,7 +156,7 @@ class expr(object):
         convexity = map(lambda x: x.is_convex(), self.children)
         concavity = map(lambda x: x.is_concave(), self.children)
         for i in xrange(len(self.children)):
-            if convexity[i] and concavity[i]:
+            if not (convexity[i] and concavity[i]):
                 continue
             if convexity[i] and self.func.is_increasing(i):
                 continue
@@ -194,9 +194,8 @@ class scalar(expr):
 
 # Scalar variable
 class scalar_var(expr):
-    def __init__(self, name = None, value = NAN):
+    def __init__(self, name = None):
         self.name  = name
-        self.value = value
     def __str__(self):
         return self.name
     def get_value(self, varmap = {}):
@@ -205,8 +204,6 @@ class scalar_var(expr):
         return NAN
     def get_vars(self):
         return set([self.name])
-    def set_value(self, value):
-        self.value = value
     def subgrad(self, varmap = {}):
         ret = {}
         if self.name in varmap:

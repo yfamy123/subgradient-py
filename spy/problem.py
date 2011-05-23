@@ -6,7 +6,7 @@ from functions import *
 class problem(object):
     def __init__(self, type, obj, constraints):
         assert type in [MINIMIZE, MAXIMIZE]
-        #assert (type == MINIMIZE and obj.is_convex()) or (type == MAXIMIZE and obj.is_concave())
+        assert (type == MINIMIZE and obj.is_convex()) or (type == MAXIMIZE and obj.is_concave())
         self.type = type
         self.obj = obj
         self.constraints = []

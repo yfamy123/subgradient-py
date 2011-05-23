@@ -87,7 +87,7 @@ class expr(object):
         for var in varmap:
             ret[var] = sum(q[i]*subgrads[i][var] for i in range(len(q)))
         return ret
-    # this is a little dirty trick
+
     def supergrad(self, varmap = {}):
         if self.func == '+':
             supergrads = map(lambda x: x.supergrad(varmap), self.children)
@@ -113,7 +113,7 @@ class expr(object):
         values = map(lambda x: x.get_value(varmap), self.children)
         q = self.func.subgrad(values)
         # q is a list of numbers
-        supergrads = map(lambda x: x.super(varmap), self.children)
+        supergrads = map(lambda x: x.supergrad(varmap), self.children)
         # subgrads is a list of maps
         # now return the "weighted sum" of the maps
         ret = {}
@@ -126,14 +126,14 @@ class expr(object):
                 if not child.is_convex(): return False
             return True
         if self.func == '*':
-            if child[1].get_value() > 0: return child[0].is_convex()
-            return child[0].is_concave()
+            if self.children[1].get_value() > 0: return self.children[0].is_convex()
+            return self.children[0].is_concave()
 
         if self.func.is_convex() == False:
             return False
         convexity = map(lambda x: x.is_convex(), self.children)
         concavity = map(lambda x: x.is_concave(), self.children)
-        for i in xrange(length(self.children)):
+        for i in xrange(len(self.children)):
             if convexity[i] and concavity[i]:
                 continue
             if convexity[i] and self.func.is_increasing(i):
@@ -148,14 +148,14 @@ class expr(object):
                 if not child.is_concave(): return False
             return True
         if self.func == '*':
-            if child[1].get_value() > 0: return child[0].is_concave()
-            return child[0].is_convex()
+            if self.children[1].get_value() > 0: return self.children[0].is_concave()
+            return self.children[0].is_convex()
 
         if self.func.is_concave() == False:
             return False
         convexity = map(lambda x: x.is_convex(), self.children)
         concavity = map(lambda x: x.is_concave(), self.children)
-        for i in xrange(length(self.children)):
+        for i in xrange(len(self.children)):
             if convexity[i] and concavity[i]:
                 continue
             if convexity[i] and self.func.is_increasing(i):
@@ -204,7 +204,7 @@ class scalar_var(expr):
             return varmap[self.name]
         return NAN
     def get_vars(self):
-        return set(self.name)
+        return set([self.name])
     def set_value(self, value):
         self.value = value
     def subgrad(self, varmap = {}):

@@ -21,10 +21,10 @@ class expr_huber(object):
             return M*(2.0*math.fabs(x)-M)
     def subgrad(self, values):
         x = values[0]
-        if x < 0.0:
-            raise ValueError('sqrt called with negative argument %f' %x)
-        else:
-            return [0.5/x]
+        M = values[1]
+        if math.fabs(x) <= M: return [2.0*x, 0.0]
+        elif x > M: return [2.0*M, 2.0*(x-m)]
+        elif x < -M: return [-2.0*M, 2.0*(-x-m)]
     def is_increasing(self, argindex): return argindex == 1
     def is_decreasing(self, argindex): return False
     def is_convex(self): return True

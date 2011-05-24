@@ -1,4 +1,5 @@
 from abs import abs
+from berhu import berhu
 from exp import exp
 from huber import huber
 from log import log
@@ -12,7 +13,7 @@ from quad_over_lin import quad_over_lin
 from sqrt import sqrt
 from square import square
 
-__all__ = ["abs", "exp", "huber", "log",
-           "max", "min", "norm1", "norm2",
-           "pos", "power", "quad_over_lin",
-           "sqrt", "square"]
+__all__ = ["abs", "berhu", "exp", "huber",
+           "log", "max", "min", "norm1",
+           "norm2", "pos", "power",
+           "quad_over_lin", "sqrt", "square"]

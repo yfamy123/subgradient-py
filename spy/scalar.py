@@ -195,7 +195,7 @@ class scalar(expr):
 # Scalar variable
 class scalar_var(expr):
     def __init__(self, name = None):
-        self.name  = name
+        self.name = name
     def __str__(self):
         return self.name
     def get_value(self, varmap = {}):

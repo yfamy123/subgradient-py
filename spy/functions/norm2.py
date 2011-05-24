@@ -1,5 +1,4 @@
 import math
-import rathom
 from spy.utils import *
 from spy.scalar import *
 

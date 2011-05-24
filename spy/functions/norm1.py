@@ -26,7 +26,7 @@ class expr_norm1(object):
         for x in values:
             if   x > 0.0: ret.append(1.0)
             elif x < 0.0: ret.append(-1.0)
-            else:         ret.append([random.uniform(-1.0, 1.0)])
+            else:         ret.append(random.uniform(-1.0, 1.0))
         return ret
     def is_increasing(self, argindex): return False
     def is_decreasing(self, argindex): return False

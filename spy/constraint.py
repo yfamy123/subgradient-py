@@ -16,4 +16,11 @@ class constraint(object):
         self.lhs = lhs
         self.rhs = rhs
         self.relop = relop
-    def cutting_plane(self, varmap = {}): pass
+    def cutting_plane(self, varmap = {}):
+        g = (self.lhs-self.rhs).subgrad(varmap)
+        vars = self.obj.get_vars()
+        t = 0
+        for varname in vars:
+            varexpr = scalar_var(varname)
+            t = t+g[varname]*(varexpr-cur[varname])
+        return constraint(t, LT, 0)

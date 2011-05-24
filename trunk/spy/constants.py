@@ -19,6 +19,7 @@ NEITHER    = 'neither'
 NAN = float('nan')
 EPS = 1e-8
 MAXITERS = 10000
+KELLEYITERS = 10
 
 # RELOPs
 LT = 'lt'

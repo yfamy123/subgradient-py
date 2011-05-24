@@ -14,13 +14,14 @@ class matrix(object):
     def __str__(self):
         return str(self.nrow) + '-by-' + str(self.ncol) + ' matrix: ' + str(self.data)
 
-    def get(self, i, j):
-        return self.data[i][j]
-    
-    def set(self, i, j, x):
-        assert isNumber(x)
-        self.data[i][j] = x
-        
+    def __setitem__(self, key, x):
+        assert type(key) == tuple
+        self.data[key[0]][key[1]] = x
+
+    def __getitem__(self, key):
+        assert type(key) == tuple
+        return self.data[key[0]][key[1]]
+
     def __mul__(self, other):
         if isinstance(other, matrix):
             assert self.ncol == other.nrow
@@ -109,11 +110,33 @@ class vector(matrix):
     def __init__(self, n):
         matrix.__init__(self, n, 1)
 
-    def get(self, i):
-        if self.nrow == 1: return self.data[0][i]
-        return self.data[i][0]
-    
-    def set(self, i, x):
+    def __setitem__(self, i, x):
         assert isNumber(x)
         if self.nrow == 1: self.data[0][i] = x
         self.data[i][0] = x
+
+    def __getitem__(self, i):
+        if self.nrow == 1: return self.data[0][i]
+        return self.data[i][0]
+
+class matrix_var(matrix):
+    def __init__(self, name = None, m, n):
+        self.name = name
+        self.nrow = m
+        self.ncol = n
+    def __str__(self):
+        return self.name
+    def get_value(self, varmap = {}):
+        if self.name in varmap:
+            return varmap[self.name]
+        return NAN
+    def get_vars(self):
+        return set([self.name])
+    def subgrad(self, varmap = {}): pass
+    def supergrad(self, varmap = {}): pass
+    def is_convex(self): return True
+    def is_concave(self): return True
+
+class vector_var(matrix_var):
+    def __init(self, name = None, n):
+        matrix_var.__init__(self, name, n, 1)

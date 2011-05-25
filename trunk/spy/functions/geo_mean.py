@@ -20,32 +20,32 @@ class expr_geo_mean(object):
         
         flag = False
         for xi in x:
-            if isinstance(xi,expr):
+            if isinstance(xi, expr):
                 flag = True 
                 break
         if not flag: 
             for xi in x:
-                if xi == 0: return 0;
+                if xi == 0: return 0
                 if xi < 0: raise ValueError('geometric mean called with'
-                                         'a vector containing a negative entry')
+                                            'a vector containing a negative entry')
             
                 return math.exp(sum([math.log(xi)/n for xi in x]))
         y = []
         for i in range(len(x)):
-            if isNumber(x[i]): y.append(scalar(x[i]));
+            if isNumber(x[i]): y.append(scalar(x[i]))
             else: y.append(x[i])
-        return expr(self,y)
+        return expr(self, y)
 
 
-    def subgrad(self,values):
+    def subgrad(self, values):
         n = len(values)
         prod = math.exp(sum([math.log(xi)/n for xi in values]))
         return [prod/(xi*n) for xi in values]
 
-    def is_increasing(self,argindex): return True
-    def is_decreasing(self,argindex): return False
-    def is_convex(self):return False
-    def is_concave(self):return True
+    def is_increasing(self, argindex): return True
+    def is_decreasing(self, argindex): return False
+    def is_convex(self): return False
+    def is_concave(self): return True
 
 # Function instance
 geo_mean = expr_geo_mean()

@@ -17,7 +17,7 @@ class problem(object):
             if cons.relop == GT or cons.relop == EQ:
                 self.constraints.append(cons.rhs-cons.lhs)
         
-    def solve(self, cur = None, stepsize = 1.0):
+    def solve(self, cur = None, stepsize = 1.0/scalar_var('iter')):
         if self.type == MAXIMIZE:
             self.obj = -self.obj
         vars = self.obj.get_vars()
@@ -34,44 +34,47 @@ class problem(object):
             norm = math.sqrt(sum([x**2 for x in g.itervalues()]))
             if norm < EPS: break
             nxt = {}
+            stepsizedic = {'f': self.obj.get_value(cur), 'gnorm': norm, 'iter': iter}
+            alpha = stepsize.get_value(stepsizedic)
+            assert alpha > 0
             for (key, val) in g.iteritems():
-                nxt[key] = cur[key]-1.0*val/iter;
+                nxt[key] = cur[key]-val*alpha
             cur = nxt
         if self.type == MAXIMIZE:
             self.obj = -self.obj
         optval = self.obj.get_value(cur)
         return (optval, cur)
     
-    def kelley(self, initpoint):
-        constraints = []
-        for cons in self.constraints:
-            assert cons.get_value(initpoint) <= 0
-            constraints.append(constraint(cons, LT, 0))
+    # def kelley(self, initpoint):
+        # constraints = []
+        # for cons in self.constraints:
+            # assert cons.get_value(initpoint) <= 0
+            # constraints.append(constraint(cons, LT, 0))
         
-        if self.type == MAXIMIZE:
-            self.obj = -self.obj
+        # if self.type == MAXIMIZE:
+            # self.obj = -self.obj
 
-        kelleyobj = 0
-        cur = initpoint
-        u = self.obj.get_value(cur)
-        optpoint = cur
-        cuttingplanes = []
-        for iter in range(1, KELLEYITERS+1):
-            f = self.obj.get_value(cur)
-            if u > f:
-                u = f
-                optpoint = cur
-            g = self.obj.subgrad(cur)
-            vars = self.obj.get_vars()
-            t = f
-            for varname in vars:
-                varexpr = scalar_var(varname)
-                t = t+g[varname]*(varexpr-cur[varname])
-            cuttingplanes.append(t)
-            (l, cur) = problem(MINIMIZE, max(cuttingplanes), constraints).solve(cur)
+        # kelleyobj = 0
+        # cur = initpoint
+        # u = self.obj.get_value(cur)
+        # optpoint = cur
+        # cuttingplanes = []
+        # for iter in range(1, KELLEYITERS+1):
+            # f = self.obj.get_value(cur)
+            # if u > f:
+                # u = f
+                # optpoint = cur
+            # g = self.obj.subgrad(cur)
+            # vars = self.obj.get_vars()
+            # t = f
+            # for varname in vars:
+                # varexpr = scalar_var(varname)
+                # t = t+g[varname]*(varexpr-cur[varname])
+            # cuttingplanes.append(t)
+            # (l, cur) = problem(MINIMIZE, max(cuttingplanes), constraints).solve(cur)
 
-        if self.type == MAXIMIZE:
-            self.obj = -self.obj
+        # if self.type == MAXIMIZE:
+            # self.obj = -self.obj
 
-        optval = self.obj.get_value(optpoint)
-        return (optval, optpoint)
+        # optval = self.obj.get_value(optpoint)
+        # return (optval, optpoint)

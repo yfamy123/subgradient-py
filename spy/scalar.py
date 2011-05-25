@@ -20,6 +20,7 @@ class expr(object):
     	values = map(lambda x: x.get_value(varmap), self.children)
         if self.func == '+': return __builtin__.sum(values)
         elif self.func == '*': return values[0]*values[1]
+        elif self.func == '/': return values[0]/values[1]
         return self.func(values)
     def get_vars(self):
         ret = set()
@@ -27,18 +28,20 @@ class expr(object):
             ret = ret.union(child.get_vars())
         return ret
 
-    # can multiply by constant only
-    # warning: the first argument is an expression, the second is a scalar
+    # in a convex expression, can multiply by constant only
+    # otherwise, multiplying by any number is permitted
     def __mul__(self, other):
-        assert isNumber(other)
-        if other == 1.0: return self
-        if other == 0.0: return 0.0
-        return expr('*', [self, scalar(other)])
+        if isNumber(other): return expr('*', [self, scalar(other)])
+        return expr('*', [self, other])
     def __rmul__(self, other):
-        assert isNumber(other)
-        if other == 1.0: return self
-        if other == 0.0: return 0.0
-        return expr('*', [self, scalar(other)])
+        if isNumber(other): return expr('*', [self, scalar(other)])
+        return expr('*', [self, other])
+    def __div__(self, other):
+        if isNumber(other): return expr('/', [self, scalar(other)])
+        return expr('/', [self, other])
+    def __rdiv__(self, other):
+        if isNumber(other): return expr('/', [scalar(other), self])
+        return expr('/', [other, self])
     def __neg__(self):
         return (-1.0)*self
 
@@ -62,13 +65,23 @@ class expr(object):
             for var in varmap:
                 ret[var] = sum(subgrad[var] for subgrad in subgrads)
             return ret
-        if self.func == '*': # first arg is expression, second is scalar
+        if self.func == '*':
+            assert isinstance(self.children[1], scalar)
             c = self.children[1].get_value()
             if c > 0: q = self.children[0].subgrad(varmap)
             else: q = self.children[0].supergrad(varmap)
             ret = {}
             for var in varmap:
                 ret[var] = q[var]*c
+            return ret
+        if self.func == '/':
+            assert isinstance(self.children[1], scalar)
+            c = self.children[1].get_value()
+            if c > 0: q = self.children[0].subgrad(varmap)
+            else: q = self.children[0].supergrad(varmap)
+            ret = {}
+            for var in varmap:
+                ret[var] = q[var]/c
             return ret
 
         # composition rule
@@ -95,13 +108,23 @@ class expr(object):
             for var in varmap:
                 ret[var] = sum(supergrad[var] for supergrad in supergrads)
             return ret
-        if self.func == '*': # first arg is expression, second is scalar
+        if self.func == '*':
+            assert isinstance(self.children[1], scalar)
             c = self.children[1].get_value()
             if c > 0: q = self.children[0].supergrad(varmap)
             else: q = self.children[0].subgrad(varmap)
             ret = {}
             for var in varmap:
                 ret[var] = q[var]*c
+            return ret
+        if self.func == '/':
+            assert isinstance(self.children[1], scalar)
+            c = self.children[1].get_value()
+            if c > 0: q = self.children[0].supergrad(varmap)
+            else: q = self.children[0].subgrad(varmap)
+            ret = {}
+            for var in varmap:
+                ret[var] = q[var]/c
             return ret
 
         # composition rule
@@ -126,6 +149,11 @@ class expr(object):
                 if not child.is_convex(): return False
             return True
         if self.func == '*':
+            assert isinstance(self.children[1], scalar)
+            if self.children[1].get_value() > 0: return self.children[0].is_convex()
+            return self.children[0].is_concave()
+        if self.func == '/':
+            assert isinstance(self.children[1], scalar)
             if self.children[1].get_value() > 0: return self.children[0].is_convex()
             return self.children[0].is_concave()
 
@@ -148,6 +176,11 @@ class expr(object):
                 if not child.is_concave(): return False
             return True
         if self.func == '*':
+            assert isinstance(self.children[1], scalar)
+            if self.children[1].get_value() > 0: return self.children[0].is_concave()
+            return self.children[0].is_convex()
+        if self.func == '/':
+            assert isinstance(self.children[1], scalar)
             if self.children[1].get_value() > 0: return self.children[0].is_concave()
             return self.children[0].is_convex()
 
@@ -170,7 +203,7 @@ class expr(object):
 # Scalar constant
 class scalar(expr):
     def __init__(self, value = None):
-        self.value = value
+        self.value = float(value)
     def __str__(self):
         return str(self.value)
     def get_value(self, varmap = {}):

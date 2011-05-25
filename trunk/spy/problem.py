@@ -17,7 +17,7 @@ class problem(object):
             if cons.relop == GT or cons.relop == EQ:
                 self.constraints.append(cons.rhs-cons.lhs)
         
-    def solve(self, cur = None):
+    def solve(self, cur = None, stepsize = 1.0):
         if self.type == MAXIMIZE:
             self.obj = -self.obj
         vars = self.obj.get_vars()

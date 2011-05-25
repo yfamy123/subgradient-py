@@ -32,17 +32,3 @@ if __name__ == "__main__":
     print_sol(maximize(-ex3, constraints).solve())
     print_sol(maximize(-ex4, constraints).solve())
     print_sol(maximize(-ex5, constraints).solve())
-
-    
-    print_sol(minimize(ex1, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(minimize(ex2, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(minimize(ex3, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(minimize(ex4, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(minimize(ex5, constraints).kelley({'x1': 1, 'x2': 1}))
-    
-    print_sol(maximize(-ex1, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(maximize(-ex2, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(maximize(-ex3, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(maximize(-ex4, constraints).kelley({'x1': 1, 'x2': 1}))
-    print_sol(maximize(-ex5, constraints).kelley({'x1': 1, 'x2': 1}))
-    

@@ -24,7 +24,9 @@ class problem(object):
         if cur == None:
             cur = {}
             for var in vars: cur[var] = 0.0
+        optval = None
         for iter in range(1, MAXITERS+1):
+            f = self.obj.get_value(cur)
             g = None
             for cons in self.constraints:
                 if cons.get_value(cur) > 0:
@@ -34,7 +36,10 @@ class problem(object):
             norm = math.sqrt(sum([x**2 for x in g.itervalues()]))
             if norm < EPS: break
             nxt = {}
-            stepsizedic = {'f': self.obj.get_value(cur), 'gnorm': norm, 'iter': iter}
+            if self.type == MAXIMIZE:
+                stepsizedic = {'f': -f, 'gnorm': norm, 'iter': iter}
+            else:
+                stepsizedic = {'f': f, 'gnorm': norm, 'iter': iter}
             alpha = stepsize.get_value(stepsizedic)
             assert alpha > 0
             for (key, val) in g.iteritems():

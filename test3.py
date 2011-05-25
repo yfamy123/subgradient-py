@@ -19,7 +19,7 @@ if __name__ == "__main__":
     ex4 = max(x1, x2)
     ex5 = square(x1)+9*square(x2)
     
-    constraints = [greater(2*x1+x2, 1), greater(x1+3*x2, 1), greater(x1, 0), greater(x2, 0)]
+    constraints = [geq(2*x1+x2, 1), geq(x1+3*x2, 1), geq(x1, 0), geq(x2, 0)]
 
     print_sol(minimize(ex1, constraints).solve())
     print_sol(minimize(ex2, constraints).solve())

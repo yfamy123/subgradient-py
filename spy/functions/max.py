@@ -20,7 +20,7 @@ class expr_max(object):
             else: y.append(x[i])
         return expr(self, y)
         
-    def supergrad(self, values):
+    def subgrad(self, values):
         y = self(values)
         return [(float)(x == y) for x in values]
     def is_increasing(self, argindex): return True

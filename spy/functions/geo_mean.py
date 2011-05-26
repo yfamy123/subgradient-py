@@ -16,7 +16,7 @@ class expr_geo_mean(object):
         while type(args[0]) is list: args = args[0]
         
         x = args
-        n = len(args) 
+        n = float(len(args))
         
         flag = False
         for xi in x:
@@ -38,7 +38,7 @@ class expr_geo_mean(object):
 
 
     def subgrad(self, values):
-        n = len(values)
+        n = float(len(values))
         prod = math.exp(sum([math.log(xi)/n for xi in values]))
         return [prod/(xi*n) for xi in values]
 

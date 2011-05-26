@@ -1,11 +1,8 @@
 \\
-The subgradient method is anologous to gradient descent method for
-minimizing differentiable functions.
+The subgradient method is similar to gradient descent methods for minimizing differentiable functions.
 
 \begin{itemize}
-\item Update is: $x^{(k+1)}=x^{(k)}-\alpha_kg^{(k)}$
-\item $x^{(k)}$ is $k$-th iterate
-\item $g^{(k)}$ is \emph{a} subgradient of $f$ at $x^{(k)}$
-\item $\alpha_k$ is $k$-th step size
+\item At $x^{(k)}$, find $g^{(k)} \in f(x^{(k)})$.
+\item Set the next point as $x^{(k+1)}:=x^{(k)}-\alpha_kg^{(k)}$, where $\alpha_k$ is $k$-th step size.
 
 \end{itemize}

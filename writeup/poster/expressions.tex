@@ -1,5 +1,5 @@
 \begin{itemize}
-\item Currently, \verb'SPY' only supports scalar real variables and scalar-valued expressions.
+\item The current system only supports scalar variables and scalar-valued expressions.
 \item Internally, an expression is stored as a tree.
 \begin{center}
 \includegraphics[width=0.6\textwidth]{poster/expr}
@@ -8,5 +8,5 @@ The tree above corresponds to the following mathematical expression:
 \begin{equation*}
 |x-3|+e^x \; .
 \end{equation*}
-\item Convexity or concavity of an expression is not tested at construction time.
+\item Convexity or concavity of an expression is not tested at construction time, so one can construct arbitrary expressions.
 \end{itemize}

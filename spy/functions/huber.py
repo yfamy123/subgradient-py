@@ -14,7 +14,7 @@ class expr_huber(object):
         x = args[0]
         M = args[1]
         if isinstance(x, expr):
-            return expr(self, [x, M])
+            return expr(self, [x, scalar(M)])
         elif math.fabs(x) <= M:
             return x*x
         else:

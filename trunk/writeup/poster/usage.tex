@@ -1,0 +1,41 @@
+\begin{itemize}
+\item Declaring variables: \\
+One can declare a variable using the following syntax.
+\begin{verbatim}
+x = var('x')
+\end{verbatim}
+The object \verb'x' is a symbolic link to the variable with the identifier string \verb,'x',.
+\item Forming expressions: \\
+The following line creates an expression named \verb'ex'.
+\begin{verbatim}
+ex = abs(x - 3) + exp(x)
+\end{verbatim}
+\verb'SPY' does not attempt to simplify a given expression.
+\item Computing values and subgradients of expressions: \\
+The following code computes the value and a subgradient at a point given by \verb'varmap'.
+\begin{verbatim}
+varmap = {'x': 1.5, 'y': -2}
+val    = ex.get_value(varmap)
+g      = ex.subgrad(varmap)
+\end{verbatim}
+To represent a point, users should use a dictionary rather than a list of values.
+\item Specifying constraints: \\
+One can use \verb'leq', \verb'eq', or \verb'geq' to construct a constraint object.
+\begin{verbatim}
+cons = leq(norm2([x1, x2]), y)
+\end{verbatim}
+At construction time, \verb'SPY' will automatically check if inequalities and equalities follow the DCP ruleset.
+\item Solving an optimization problem:
+\begin{verbatim}
+myprob = minimize(ex, [cons1, cons2])
+(optval, optpoint) = myprob.solve()
+\end{verbatim}
+The lines above minimizes \verb'ex' subject to two constraints \verb'cons1' and \verb'cons2' using the subgradient method. As a result, the optimal point as well as the objective value at that point will be returned. Advanced users can specify the step size rule used by the method.
+\item Available library functions:
+\begin{itemize}
+\item \verb'abs', \verb'max', \verb'min', \verb'pos'
+\item \verb'exp', \verb'log', \verb'log_sum_exp', \verb'rel_entr'
+\item \verb'norm1', \verb'norm2', \verb'berhu', \verb'huber'
+\item \verb'power', \verb'power_pos', \verb'square', \verb'square_pos', \\ \verb'sqrt', \verb'geo_mean', \verb'quad_over_lin'
+\end{itemize}
+\end{itemize}

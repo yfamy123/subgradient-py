@@ -18,7 +18,7 @@ NEITHER    = 'neither'
 # Constants
 NAN = float('nan')
 EPS = 1e-8
-MAXITERS = 10000
+MAXITERS = 20000
 KELLEYITERS = 10
 
 # RELOPs

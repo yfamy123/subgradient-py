@@ -1,5 +1,5 @@
 \begin{itemize}
-\item The current system only supports scalar variables and scalar-valued expressions. It is desirable to have vectors and matrices.
-\item Although \verb'SPY' has all the basic library functions, it will be useful to have more \verb'CVX'-like library functions.
+\item \verb'SPY' does not work well with equality constraints (yet).
+\item Convergence behavior depends on the step sizes, so it is up to users to give a ``right'' step size rule.
 \item Currently, \verb'SPY' cannot detect if the given problem is unbounded. Extending \verb'SPY' to detect unboundedness will be a great deal of work, but it will be useful.
 \end{itemize}

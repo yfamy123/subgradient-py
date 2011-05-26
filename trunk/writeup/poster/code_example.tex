@@ -2,8 +2,14 @@
 from spy import *
 x = var('x')
 y = var('y')
-ex = max(x+y,2*x-y) + abs(x)
-constraints = [greater(y,0),less(x,y)]
+ex = max(x + y, 2 * x - y) + huber(x, 1)
+constraints = [geq(x, y), leq(norm2([x, y]), 1)]
 prob = minimize(ex, constraints)
-prob.solve()
+(optval, optpoint) = prob.solve()
 \end{verbatim}
+Printing out \verb'optval' and \verb'optpoint' gives the following:
+\begin{verbatim}
+-0.250040107722
+{'y': -0.50654454816398864, 'x': -0.50662859414656536}
+\end{verbatim}
+The analytic solution is $x=y=-1/2$ with the optimal value $f^\star = -1/4$.

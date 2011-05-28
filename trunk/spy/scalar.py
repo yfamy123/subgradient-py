@@ -134,7 +134,7 @@ class expr(object):
         # return q1g1 + q2g2 + ... + qkgk
         
         values = map(lambda x: x.get_value(varmap), self.children)
-        q = self.func.subgrad(values)
+        q = self.func.supergrad(values)
         # q is a list of numbers
         supergrads = map(lambda x: x.supergrad(varmap), self.children)
         # subgrads is a list of maps

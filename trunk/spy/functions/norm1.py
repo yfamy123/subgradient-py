@@ -1,4 +1,5 @@
 import random
+import math
 from spy.utils import *
 from spy.scalar import *
 

@@ -16,8 +16,9 @@ class expr_pos(object):
         return 0.0
     def subgrad(self, values):
         x = values[0]
-        if x > 0.0:   return [1.0]
-        else:         return [random.uniform(0.0, 1.0)]
+        if x == 0.0:  return [random.uniform(0.0, 1.0)]
+        elif x > 0.0:   return [1.0]
+        else:         return [0.0]
     def is_increasing(self, argindex): return False
     def is_decreasing(self, argindex): return False
     def is_convex(self): return True

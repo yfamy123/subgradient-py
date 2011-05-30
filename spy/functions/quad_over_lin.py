@@ -11,6 +11,7 @@ class expr_quad_over_lin(object):
         x = args[0]
         y = args[1]
         if isNumber(x) and isNumber(y):
+            if y==0: raise ValueError('Division by zero in quadratic over linear')
             return x*x/y
         if isNumber(x): x = scalar(x)
         if isNumber(y): y = scalar(y)

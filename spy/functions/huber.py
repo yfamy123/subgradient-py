@@ -8,7 +8,7 @@ class expr_huber(object):
     def __call__(self, *args):
         while type(args[0]) is list: args = args[0]
         assert len(args) == 1 or len(args) == 2
-        if len(args) == 1: args.append(1.0)        
+        if len(args) == 1: args.append(1.0)  
         assert isNumber(args[1]) and args[1] >= 0
         
         x = args[0]
@@ -23,8 +23,8 @@ class expr_huber(object):
         x = values[0]
         M = values[1]
         if math.fabs(x) <= M: return [2.0*x, 0.0]
-        elif x > M: return [2.0*M, 2.0*(x-m)]
-        elif x < -M: return [-2.0*M, 2.0*(-x-m)]
+        elif x > M: return [2.0*M, 2.0*(x-M)]
+        elif x < -M: return [-2.0*M, 2.0*(-x-M)]
     def is_increasing(self, argindex): return argindex == 1
     def is_decreasing(self, argindex): return False
     def is_convex(self): return True

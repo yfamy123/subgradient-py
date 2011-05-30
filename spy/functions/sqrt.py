@@ -20,7 +20,7 @@ class expr_sqrt(object):
         if x < 0.0:
             raise ValueError('sqrt called with negative argument %f' %x)
         else:
-            return [0.5/x]
+            return [0.5/math.sqrt(x)]
     def is_increasing(self, argindex): return True
     def is_decreasing(self, argindex): return False
     def is_convex(self): return False

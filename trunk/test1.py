@@ -40,7 +40,7 @@ if __name__ == "__main__":
     ex = sqrt(x+y)
     print ex
     print ex.get_value({'x': 3, 'y': 4})
-    print ex.subgrad({'x': 3, 'y': 4})
+    print ex.supergrad({'x': 3, 'y': 4})
 
     ex = max(0, 3*x)
     print ex

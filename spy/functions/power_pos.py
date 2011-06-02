@@ -5,7 +5,7 @@ from spy.scalar import *
 class expr_power_pos(object):
     """
     Function power_pos(p,x) = max {0 ,p} ^ x, where x>=1.
-    Convex and non-decreasing.
+   
     """
     def __init__(self):
         self.name = 'power_pos'
@@ -17,8 +17,7 @@ class expr_power_pos(object):
         x = args[1]
 
 
-        if x<1:
-            raise ValueError('power_pos called with exponent %f < 1' %x)
+  
         if p == 0 or p == 1:
             return p
         elif 0 < p < 1:
@@ -44,10 +43,10 @@ class expr_power_pos(object):
         base = max(0,p)
         if base == 0.0 or base == 1.0: return [0.0]
         else:                          return [pow(base, x)*math.log(base)]
-    def is_increasing(self, argindex): True
-    def is_decreasing(self, argindex): False
-    def is_convex(self): True
-    def is_concave(self): False
+    def is_increasing(self, argindex): pass
+    def is_decreasing(self, argindex): pass
+    def is_convex(self): pass
+    def is_concave(self): pass
 
 # Function instance
 power_pos = expr_power_pos()

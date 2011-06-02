@@ -36,6 +36,8 @@ optimization problems using subgradient methods. Below are some features of \ver
 \item Due to little space usage, \verb'spy' can be used to solve large problems.
 \item \verb'spy' can be combined with primal or dual decomposition techniques to develop distributed algorithms.
 \end{itemize}
+The essential part of the project is to compute subgradients correctly
+and efficiently.
 
 \subsection{Motivation}
 This project is motivated by the first two weeks of EE 364B lectures on subgradients and subgradient methods. Also, somewhat unexpectedly, there is yet no software package that can automatically compute subgradients of convex functions, or implement subgradient methods. (S. Boyd, personal communication, April 2011)
@@ -43,7 +45,7 @@ This project is motivated by the first two weeks of EE 364B lectures on subgradi
 \verb'spy' is implemented in Python. The objected-oriented paradigm of Python made it easy to implement a nontrivial project in a short time, without worrying too much about technical details. There has been some attempts to model convex optimization problems in Python, such as \verb'cvxpy', \verb'cvxmod', and \verb'cvxopt'. However, rather than integrating our project with these existing softwares, we decided to implement everything from scratch, for educational purposes.
 
 \section{A Quick Start}
-\verb'spy' can be downloaded from \url{http://www.stanford.edu/~liszt90/spy}. There is no installation package, so one can simply download the codes and unzip it to a directory named \verb'spy'.
+\verb'spy' can be downloaded from \url{http://www.stanford.edu/~liszt90/spy}. There is no installation package, so one can simply download the codes and unzip it to a directory named \verb'spy'. The zipped file also contains example codes, as well as all the unit tests.
 
 \subsection{Example Code}
 The following code solves a simple convex optimization problem using \verb'spy'.
@@ -85,15 +87,15 @@ prob = minimize(ex, constraints)
 \section{Basics}
 
 \subsection{Main Classes}
-\verb'spy' implements three important classes:
+\verb'spy' consists of three main components:
 
 \begin{itemize}
 \item Expression: Any real-valued mathematical expression is an object
 of Expression type. It can contain variables whose values are not
-predetermined. For convex expressions, subgradients can be evaluated at a given point.
+predetermined. For convex expressions that follow the DCP ruleset (refer to Section \ref{dcp}), subgradients can be evaluated at a given point.
 \item Constraint: A constraint is an inequality of the form
 $(\mbox{convex}) \le (\mbox{concave})$ or an equality of the form
-$(\mbox{affine}) = (\mbox{affine})$.
+$(\mbox{affine}) = (\mbox{affine})$. Each constraint represents a set of values that the optimization variables can take.
 \item (Optimization) Problem: A problem is a triplet of the form (minimize/maximize, objective, list of constraints).
 \end{itemize}
 
@@ -110,13 +112,13 @@ x = var('x')
 \end{quote}
 
 \noindent The meaning should be clear from the syntax; the line above declares a
-variable whose name is \verb'x' without a value assigned to it. The object \verb'x' is a symbolic link to the variable with the identifier string \verb,'x',. This allows users to recover variables from identifier strings even if they lose variable objects.
+variable whose name is \verb'x' without a value assigned to it. The object \verb'x' is a symbolic link to the variable with the identifier string \verb,'x',. Different variable objects with the same identifier string are recognized as the same variable by \verb'spy'. This design allows users to recover variables from identifier strings even if they lose variable objects.
 
 \subsection{Forming an Expression}
 With variables, it is possible to form more complicated expressions. To
 provide a clean interface to the user, we have overloaded basic arithmetic operators as
 well as some of the Python built-in functions. This allows users to form
-expressions in a natural way. For instance, the following line will create an expression named \verb'ex'.
+expressions in a natural way. For instance, the following line will create an expression named \verb'ex', using a variable object \verb'x'.
 
 \begin{quote}
 \begin{verbatim}
@@ -124,10 +126,10 @@ ex = abs(x - 3) + exp(x)
 \end{verbatim}
 \end{quote}
 
-\noindent The expression above corresponds to a mathematical expression
+\noindent This expression corresponds to a mathematical expression
 $|x-3|+e^x$. It should be noted that \verb'spy' does not attempt to
-simplify a given expression, nor does it immediately compute the value of
-a newly formed expressions. All computations are done lazily; the
+simplify an expression, nor does it immediately compute the value of
+a newly formed expression. All computations are done lazily; the
 values will be computed only when the \verb'get_value' method is called on
 it. Internally, the expression is stored as a tree shown in the following diagram:
 
@@ -136,7 +138,7 @@ it. Internally, the expression is stored as a tree shown in the following diagra
 \end{center}
 
 \subsection{Retrieving Values or Subgradients}
-Because the values of variables in an expression is not predetermined, a user needs to specify them manually in order to retrieve the actual value or a subgradient of the expression. The values of the variables are not passed in as a list of numbers as one might expect. Rather, the values are passed as a dictionary that maps the name of variables to their values. The benefit of this design is that one can readily access the value of a variable by its name.
+Because the values of variables in an expression are not predetermined, a user needs to specify them manually in order to retrieve the actual value or a subgradient of the expression. The values of the variables are not passed in as a list of numbers as one might expect. Rather, the values are passed as a dictionary that maps the name of variables to their values. The benefit of this design is that one can readily access the value of a variable by its name.
 
 \begin{quote}
 \begin{verbatim}
@@ -146,24 +148,21 @@ g = ex.subgrad(varmap)
 \end{verbatim}
 \end{quote}
 
-\noindent The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the (scalar-valued) result in \verb'val'. Note that the argument to the \verb'get_value' method is a dictionary, not a list of coordinates. The next line computes a subgradient of \verb'ex' evaluated at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned. Users can retrieve all the variables in an expression by calling \verb'get_vars' method on it.
+\noindent The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the (scalar-valued) result in \verb'val'. Note that the argument to \verb'get_value' is a dictionary, not a list of coordinates. The next line computes a subgradient of \verb'ex' evaluated at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. When there are multiple subgradients at the given point, \verb'spy' will try to give different subgradients every time \verb'get_value' is called. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned. Users can retrieve the list of variables in an expression by calling \verb'get_vars' method on it.
 
 The subgradient computation, as mentioned above, is the most crucial part of this project. This feature has been tested by multiple scripts that solve simple optimization problems. Also, whenever a new library function is added, a unit test is implemented in order to ensure that the functions behave as expected.
 
 \subsection{Specifying Constraints}
 One can use \verb'leq', \verb'eq', or \verb'geq' to construct a constraint
 object. At construction time, \verb'spy' automatically checks whether inequalities
-and equalities follow the DCP ruleset. Constraints should be of the form
-$(\mbox{convex}) \le (\mbox{concave})$ or 
-$(\mbox{affine}) = (\mbox{affine})$.
+and equalities follow the DCP ruleset.
 
-Another important feature of the Constraint class is the \verb'cutting_plane'
+Another important feature of the Constraint class is \verb'cutting_plane'
 function. This method returns a deep cutting plane whenever a constraint is
-violated. Let $f(x) \le 0$ be a constraint. From the definition of subgradients, $f(z) \ge f(x)+g^T(z-x)$ holds for all $z$, where $g \in \partial f(x)$. If $f(x)>0$, then for $f(z)\le 0$ to hold, we need $g^T z + f(x)-g^T x<0$.
-
+violated. Let $f$ be a convex function, and assume that $f(x) > 0$. For a point $z$ to satisfy $f(z) \le 0$, it must satisfy $g^T z + f(x)-g^T x<0$, where $g \in \partial f(x)$. This can be derived easily from the definition of subgradients.
 
 \subsection{Solving Optimization Problems}
-One can solve convex optimization problems using the following syntax:
+One can describe and solve a convex optimization problem using the following syntax:
 
 \begin{quote}
 \begin{verbatim}
@@ -172,11 +171,9 @@ myprob = minimize(ex, [cons1, cons2])
 \end{verbatim}
 \end{quote}
 
-\noindent The lines above minimizes the expression \verb'ex' subject to two constraints
-\verb'cons1' and \verb'cons2' using the subgradient method. As a result,
+\noindent Here, \verb'myprob' is a description of an optimization problem. The second line calls \verb'solve' method, which minimizes the expression \verb'ex' subject to two constraints \verb'cons1' and \verb'cons2' using the subgradient method. As a result,
 the optimal point as well as the objective value at that point will be
-returned. Advanced users can specify the step size rule used by the
-method.
+returned. Advanced users can specify the step size rule used by the method. Refer to Section \ref{subgmethod}.
 
 \section{Technical Details}
 
@@ -186,22 +183,21 @@ analogous to the chain rule for differentiable functions.
 For each library function, we've implemented a method that computes 
 its subgradient at a given point. For the complete list of library functions, see section \ref{libfunctions}.
 
-Subgradients of more complicated expressions can be computed 
-using the composition rule \cite{subg}:
+Subgradients of complex expressions can be computed using the composition rule \cite{subg}:
 \begin{itemize}
-\item Let $f(x) = h(f_1(x), \ldots, f_k(x))$ with $h$ convex non-decreasing,
-  $f_i$ convex.
-\item Find $c \in \partial h(f_1(x), \ldots, f_k(x))$,  $g_i \in \partial
-  f_i(x)$
+\item Let $f(x) = h(f_1(x), \ldots, f_k(x))$, with $h$ convex non-decreasing,
+  each $f_i$ convex.
+\item Find $c \in \partial h(f_1(x), \ldots, f_k(x))$, $g_i \in \partial
+  f_i(x)$.
 \item Then, $g = c_1 g_1 + c_2 g_2 + \cdots + c_k g_k$ is a subgradient of $f$ at $x$.
 \end{itemize}
 
-
-\subsection{DCP ruleset}
+\subsection{DCP Ruleset}
+\label{dcp}
 Whenever a constraint is specified, the constraints class automatically checks whether inequalities and equalities follow the DCP ruleset \cite{guide}. Similarly, the problem class checks whether the objective of the minimization (resp. maximization) is convex (resp. concave). This is done by applying the general vector composition rule \cite{cvx}, using the monotonicity and convexity properties of the atomic functions.
 
-
 \subsection{Subgradient Method}
+\label{subgmethod}
 The \verb'solve' method of the Problem class implements a subgradient method, which is similar to gradient descent methods for minimizing differentiable functions. Consider the following optimization problem.
 
 \begin{equation*}
@@ -211,7 +207,7 @@ The \verb'solve' method of the Problem class implements a subgradient method, wh
 \end{aligned}
 \end{equation*}
 
-By default, the \verb'solve' method sets every variable in $f$ as zero, and repeatedly applies the following update rule.
+By default, the \verb'solve' method sets every variable in $f$ as zero, and repeatedly applies the following update rule until convergence, or until the iteration limit is reached. Related constants can be adjusted in \verb'constants.py'.
 
 \begin{itemize}
 \item Let $x^{(k)}$ be the $k$th iteration point. If $x^{(k)}$ is feasible, find $g^{(k)} \in \partial f(x^{(k)})$. Otherwise, find the constraint that is most violated, say $f_i$, and find $g^{(k)} \in \partial f_i(x^{(k)})$.
@@ -244,10 +240,10 @@ The following list contains the functions that are implemented in the current ve
 \section{Limitations}
 We are aware of the following issues with \verb'spy'.
 \begin{itemize}
-\item \verb'spy' does not work well with equality constraints (yet).
+\item \verb'spy' does not work well with equality constraints yet.
 \item Convergence behavior depends on the step sizes, so it is up to users to give a ``right'' step size rule.
 \item Currently, \verb'spy' cannot detect if the given problem is unbounded.
-\item \verb'spy' only works with scalar-valued variables and expressions. We have a simple implementation of the matrix class, but it is not yet integrated with \verb'spy'.
+\item \verb'spy' only works with scalar-valued variables and expressions. We have a simple implementation of the matrix class, but it is not yet integrated with \verb'spy'. This class is written from scratch as well, and does not depend on any other scientific computing packages such as \verb'numpy'.
 \end{itemize}
 
 

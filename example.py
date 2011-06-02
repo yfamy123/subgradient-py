@@ -124,4 +124,4 @@ def example_problem():
 
 if __name__ == "__main__":
     example_expressions()
-    example_problem();
+    example_problem()

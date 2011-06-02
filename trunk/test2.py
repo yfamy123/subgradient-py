@@ -10,6 +10,6 @@ if __name__ == "__main__":
     print ex2
     ex = max(ex1, ex2)
     print ex
-    constraints = [greater(x+y, 0)]
+    constraints = [geq(x+y, 0)]
     prob = minimize(ex, constraints)
     prob.solve()

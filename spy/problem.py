@@ -17,7 +17,8 @@ class problem(object):
             if cons.relop == GT or cons.relop == EQ:
                 self.constraints.append(cons.rhs-cons.lhs)
         
-    def solve(self, cur = None, stepsize = 1.0/scalar_var('iter')):
+    def solve(self, stepsize = 1.0/scalar_var('iter'), cur = None):
+        if isNumber(stepsize): stepsize = scalar(stepsize)
         if self.type == MAXIMIZE:
             self.obj = -self.obj
         vars = self.obj.get_vars()
@@ -28,10 +29,11 @@ class problem(object):
         for iter in range(1, MAXITERS+1):
             f = self.obj.get_value(cur)
             g = None
+            maxres = 0
             for cons in self.constraints:
-                if cons.get_value(cur) > 0:
+                if cons.get_value(cur) > maxres:
+                    maxres = cons.get_value(cur)
                     g = cons.subgrad(cur)
-                    break
             if g == None: g = self.obj.subgrad(cur)
             norm = math.sqrt(sum([x**2 for x in g.itervalues()]))
             if norm < EPS: break

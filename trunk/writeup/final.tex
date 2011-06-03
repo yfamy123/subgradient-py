@@ -40,7 +40,7 @@ The essential part of the project is to compute subgradients correctly
 and efficiently.
 
 \subsection{Motivation}
-This project is motivated by the first two weeks of EE 364B lectures on subgradients and subgradient methods. Also, somewhat unexpectedly, there is yet no software package that can automatically compute subgradients of convex functions, or implement subgradient methods. (S. Boyd, personal communication, April 2011)
+This project is motivated by the first two weeks of EE 364B lectures on subgradients and subgradient methods. Also, somewhat unexpectedly, there is yet no software package that can automatically compute subgradients of convex functions, or implement subgradient methods. (S. Boyd, personal communication, April 2011) Therefore, we decided to implement an automatic subgradient calculator, and extend it to a convex optimization problem solver based on subgradient methods.
 
 \verb'spy' is implemented in Python. The objected-oriented paradigm of Python made it easy to implement a nontrivial project in a short time, without worrying too much about technical details. There has been some attempts to model convex optimization problems in Python, such as \verb'cvxpy', \verb'cvxmod', and \verb'cvxopt'. However, rather than integrating our project with these existing softwares, we decided to implement everything from scratch, for educational purposes.
 
@@ -67,7 +67,7 @@ prob = minimize(ex, constraints)
 \begin{itemize}
 \item Line 1: Import all modules from the \verb'spy' package.
 \item Line 2-3: Declare $x$ and $y$ as (scalar) optimization variables.
-\item Line 4: Form an instance of the Expression class, corresponding to the mathematical expression: $\max(x+y,2x-y)+x^2$.
+\item Line 4: Form a symbolic expression using the variables declared in the previous line. The expression corresponds to the mathematical expression $\max(x+y,2x-y)+x^2$.
 \item Line 5: Specify the constraints of the optimization problem: $x \geq y$ and $\sqrt{x^2+y^2} \leq 1$.
 \item Line 6: Define the optimization problem: ``minimize \verb'ex' subject to \verb'constraints'.''
 \item Line 7: Solve the optimization problem using a subgradient method.
@@ -82,7 +82,7 @@ prob = minimize(ex, constraints)
 \end{verbatim}
 \end{quote}
 
-\noindent The analytic solution is $x=y=-1/2$ with the optimal value $f^\star = -1/4$.
+\noindent The analytic solution is $x=y=-1/2$ with the optimal value $f^\star = -1/4$. The accuracy of the solution can be improved by adjusting parameters of the subgradient method. For more information, refer to Section \ref{subgmethod}.
 
 \section{Basics}
 
@@ -96,11 +96,8 @@ predetermined. For convex expressions that follow the DCP ruleset (refer to Sect
 \item Constraint: A constraint is an inequality of the form
 $(\mbox{convex}) \le (\mbox{concave})$ or an equality of the form
 $(\mbox{affine}) = (\mbox{affine})$. Each constraint represents a set of values that the optimization variables can take.
-\item (Optimization) Problem: A problem is a triplet of the form (minimize/maximize, objective, list of constraints).
+\item (Optimization) Problem: A problem is a triplet of the form (minimize/maximize, objective, list of constraints). The objective function of the minimization (resp. maximization) problem must be convex (resp. concave).
 \end{itemize}
-
-\noindent The essential part of the project is to compute subgradients correctly
-and efficiently, since all other methods rely heavily on subgradients.
 
 \subsection{Declaring Variables}
 One can declare a variable using the following command.
@@ -112,7 +109,7 @@ x = var('x')
 \end{quote}
 
 \noindent The meaning should be clear from the syntax; the line above declares a
-variable whose name is \verb'x' without a value assigned to it. The object \verb'x' is a symbolic link to the variable with the identifier string \verb,'x',. Different variable objects with the same identifier string are recognized as the same variable by \verb'spy'. This design allows users to recover variables from identifier strings even if they lose variable objects.
+variable \verb,'x',, whose value is not predetermined. The object \verb'x' is a symbolic link to the variable with the identifier string \verb,'x',. Different variable objects with the same identifier string are recognized as the same variable by \verb'spy'. This design allows users to recover variables from identifier strings even if they lose variable objects.
 
 \subsection{Forming an Expression}
 With variables, it is possible to form more complicated expressions. To
@@ -148,7 +145,7 @@ g = ex.subgrad(varmap)
 \end{verbatim}
 \end{quote}
 
-\noindent The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the (scalar-valued) result in \verb'val'. Note that the argument to \verb'get_value' is a dictionary, not a list of coordinates. The next line computes a subgradient of \verb'ex' evaluated at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. When there are multiple subgradients at the given point, \verb'spy' will try to give different subgradients every time \verb'get_value' is called. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned. Users can retrieve the list of variables in an expression by calling \verb'get_vars' method on it.
+\noindent The code above will evaluate the expression \verb'ex' at $x=1.5$ and $y=-2$, and store the result in \verb'val'. Note that the argument to \verb'get_value' is a dictionary, not a list of coordinates. The next line computes a subgradient of \verb'ex' evaluated at the same point, storing the result into \verb'g'. The data type of \verb'g' is the same as that of \verb'varmap'. When there are multiple subgradients at the given point, \verb'spy' will try to give different subgradients every time \verb'get_value' is called. For these methods to work correctly, users need to specify the values of all the variables present in the expression. Otherwise, \verb'nan' will be returned. Users can retrieve the list of variables in an expression by calling \verb'get_vars' method on it.
 
 The subgradient computation, as mentioned above, is the most crucial part of this project. This feature has been tested by multiple scripts that solve simple optimization problems. Also, whenever a new library function is added, a unit test is implemented in order to ensure that the functions behave as expected.
 
@@ -159,7 +156,7 @@ and equalities follow the DCP ruleset.
 
 Another important feature of the Constraint class is \verb'cutting_plane'
 function. This method returns a deep cutting plane whenever a constraint is
-violated. Let $f$ be a convex function, and assume that $f(x) > 0$. For a point $z$ to satisfy $f(z) \le 0$, it must satisfy $g^T z + f(x)-g^T x<0$, where $g \in \partial f(x)$. This can be derived easily from the definition of subgradients.
+violated. Let $f$ be a convex function, and assume that $f(x) > 0$ for some $x$. For a point $z$ to satisfy $f(z) \le 0$, it must satisfy the inequality given by the deep cutting plane: $g^T z + f(x)-g^T x<0$. Here, $g \in \partial f(x)$.
 
 \subsection{Solving Optimization Problems}
 One can describe and solve a convex optimization problem using the following syntax:
@@ -194,7 +191,7 @@ Subgradients of complex expressions can be computed using the composition rule \
 
 \subsection{DCP Ruleset}
 \label{dcp}
-Whenever a constraint is specified, the constraints class automatically checks whether inequalities and equalities follow the DCP ruleset \cite{guide}. Similarly, the problem class checks whether the objective of the minimization (resp. maximization) is convex (resp. concave). This is done by applying the general vector composition rule \cite{cvx}, using the monotonicity and convexity properties of the atomic functions.
+Whenever a Constraint object is constructed, \verb'spy' validates the convexity of it using the DCP ruleset \cite{guide}. Similarly, when a Problem object is formed, \verb'spy' automatically checks whether the objective of the minimization (resp. maximization) is convex (resp. concave). This is done by applying the general vector composition rule \cite{cvx}, using the monotonicity and convexity properties of the atomic functions.
 
 \subsection{Subgradient Method}
 \label{subgmethod}
